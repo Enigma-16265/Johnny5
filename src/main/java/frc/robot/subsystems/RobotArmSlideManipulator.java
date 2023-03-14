@@ -31,7 +31,7 @@ public class RobotArmSlideManipulator extends SubsystemBase
 
     public void slide( double speed ) {
 
-        double rotationDistance = armLiftEncoder.getPosition() * PULLY_CIRCUMFERENCE;
+        double rotationDistance = armSlideEncoder.getPosition() * PULLY_CIRCUMFERENCE;
         
         log.trace( "Slide position: {} velocity: {}", armSlideEncoder.getPosition(), armSlideEncoder.getVelocity()  );
         log.trace( "rotationDistance: {}", rotationDistance );
