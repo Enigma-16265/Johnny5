@@ -1,8 +1,10 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class RobotIntakeManipulator extends SubsystemBase {
@@ -18,6 +20,11 @@ public class RobotIntakeManipulator extends SubsystemBase {
 
     public void intake( double speed ) {
         armIntake.set(speed);
+    }
+
+    public void simulationInit()
+    {
+        //REVPhysicsSim.getInstance().addSparkMax( armIntake, DCMotor.getNEO( 1 ) );
     }
 
 }

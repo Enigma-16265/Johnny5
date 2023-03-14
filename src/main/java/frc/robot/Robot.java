@@ -34,4 +34,15 @@ public class Robot extends TimedRobot {
     robotContainer.modeCheck();
   }
 
+  @Override
+  public void simulationInit() {
+    robotContainer.simulationInit();
+  }
+
+  @Override
+  public void simulationPeriodic()
+  {
+    robotContainer.simulationPeriodic();
+  }
+
 }

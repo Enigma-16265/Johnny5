@@ -1,9 +1,11 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class RobotArmSlideManipulator extends SubsystemBase{
@@ -20,6 +22,11 @@ public class RobotArmSlideManipulator extends SubsystemBase{
 
     public void slide( double speed ) {
         armSlide.set(speed);
+    }
+
+    public void simulationInit()
+    {
+        REVPhysicsSim.getInstance().addSparkMax( armSlide, DCMotor.getNEO( 1 ) );
     }
 
 }

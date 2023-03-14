@@ -1,9 +1,11 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class RobotTurretSpinManipulator extends SubsystemBase {
@@ -20,7 +22,19 @@ public class RobotTurretSpinManipulator extends SubsystemBase {
     }
     
     public void spin( double speed ) {
-        turretSpin.set( speed * TURRET_SPIN_SCALE_FACTOR );
+
+        //System.out.println( String.format( "Turret position: %f velocity %f", turretSpinEncoder.getPosition(), turretSpinEncoder.getVelocity() ) );
+
+        double scaledSpeed = speed * TURRET_SPIN_SCALE_FACTOR;
+
+        //System.out.println( "Turret - setting Speed: " + scaledSpeed );
+
+        turretSpin.set( scaledSpeed );
+    }
+
+    public void simulationInit()
+    {
+        REVPhysicsSim.getInstance().addSparkMax( turretSpin, DCMotor.getNEO( 1 ) );
     }
 
 }

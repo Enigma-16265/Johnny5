@@ -53,6 +53,8 @@ public class RobotDrive extends SubsystemBase{
         leftEncoder.setDistancePerPulse( ( Math.PI * WHEEL_DIAMATER_IN ) / COUNTS_PER_REV );
         rightEncoder.setDistancePerPulse( ( Math.PI * WHEEL_DIAMATER_IN ) / COUNTS_PER_REV );
         resetEncoders();
+
+        System.out.println( "Inital Drive Mode: " + mode );
     };
 
     public void resetEncoders() {
@@ -85,6 +87,7 @@ public class RobotDrive extends SubsystemBase{
         if ( this.mode != mode )
         {
             this.mode = mode;
+            System.out.println( "Set Mode: " + mode );
         }
     }
 }

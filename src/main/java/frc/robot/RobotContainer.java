@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.revrobotics.REVPhysicsSim;
+
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.RobotDrive.DriveMode;
 
@@ -97,5 +99,18 @@ public class RobotContainer {
             robotDrive.setMode( DriveMode.CURVATURE );
         }
        
-      }
+    }
+
+    public void simulationInit()
+    {
+        robotArmLiftManipulator.simulationInit();
+        robotArmSlideManipulator.simulationInit();
+        robotTurretSpinManipulator.simulationInit();
+        robotIntakeManipulator.simulationInit();
+    }
+
+    public void simulationPeriodic()
+    {
+        REVPhysicsSim.getInstance().run();
+    }
 }
