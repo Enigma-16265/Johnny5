@@ -17,7 +17,7 @@ public class RobotArmSlideManipulator extends SubsystemBase{
  
     public RobotArmSlideManipulator()
     {
-
+        
     }
 
     public void slide( double speed ) {

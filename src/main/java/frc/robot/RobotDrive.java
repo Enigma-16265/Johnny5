@@ -1,5 +1,8 @@
 package frc.robot;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.Encoder;
@@ -9,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class RobotDrive extends SubsystemBase{
  
+    private static final Logger log = LogManager.getLogger( RobotDrive.class );
+
     enum DriveMode {
         ARCADE,
         TANK,
@@ -54,7 +59,7 @@ public class RobotDrive extends SubsystemBase{
         rightEncoder.setDistancePerPulse( ( Math.PI * WHEEL_DIAMATER_IN ) / COUNTS_PER_REV );
         resetEncoders();
 
-        System.out.println( "Inital Drive Mode: " + mode );
+        log.info( "Inital Drive Mode: " + mode );
     };
 
     public void resetEncoders() {
@@ -87,7 +92,7 @@ public class RobotDrive extends SubsystemBase{
         if ( this.mode != mode )
         {
             this.mode = mode;
-            System.out.println( "Set Mode: " + mode );
+            log.info( "Set Drive Mode: " + mode );
         }
     }
 }

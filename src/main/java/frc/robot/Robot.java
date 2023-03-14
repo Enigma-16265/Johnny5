@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -12,10 +15,15 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * package after creating this project, you must also update the build.gradle file in the project.
  */
 public class Robot extends TimedRobot {
+
+  private static final Logger log = LogManager.getLogger( Robot.class );
+  
   private RobotContainer robotContainer;
   
   @Override
-  public void robotInit() {
+  public void robotInit()
+  {
+      log.info( "roboInit" );
       robotContainer = new RobotContainer();
   }
 
@@ -26,6 +34,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+    log.info( "testInit" );
     CommandScheduler.getInstance().cancelAll();
   }
 
@@ -36,6 +45,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationInit() {
+    log.info( "simulationInit" );
     robotContainer.simulationInit();
   }
 
@@ -43,6 +53,18 @@ public class Robot extends TimedRobot {
   public void simulationPeriodic()
   {
     robotContainer.simulationPeriodic();
+  }
+
+  @Override
+  public void autonomousInit()
+  {
+    log.info( "autonomousInit" );
+  }
+
+  @Override
+  public void autonomousPeriodic()
+  {
+    
   }
 
 }

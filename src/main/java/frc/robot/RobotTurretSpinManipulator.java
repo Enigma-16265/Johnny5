@@ -1,5 +1,8 @@
 package frc.robot;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
@@ -9,6 +12,8 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class RobotTurretSpinManipulator extends SubsystemBase {
+
+    private static final Logger log = LogManager.getLogger( RobotTurretSpinManipulator.class );
 
     public static final int    TURRET_SPIN_CAN_ID       = 15;
     public static final double TURRET_SPIN_SCALE_FACTOR = 0.15;
@@ -23,11 +28,11 @@ public class RobotTurretSpinManipulator extends SubsystemBase {
     
     public void spin( double speed ) {
 
-        //System.out.println( String.format( "Turret position: %f velocity %f", turretSpinEncoder.getPosition(), turretSpinEncoder.getVelocity() ) );
+        log.trace( "Turret position: {} velocity: {}", turretSpinEncoder.getPosition(), turretSpinEncoder.getVelocity()  );
 
         double scaledSpeed = speed * TURRET_SPIN_SCALE_FACTOR;
 
-        //System.out.println( "Turret - setting Speed: " + scaledSpeed );
+        log.trace( "Setting Speed: " + scaledSpeed );
 
         turretSpin.set( scaledSpeed );
     }
