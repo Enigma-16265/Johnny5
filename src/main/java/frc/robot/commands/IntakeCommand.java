@@ -1,16 +1,17 @@
-package frc.robot;
+package frc.robot.commands;
 
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.RobotIntakeManipulator;
 
-public class ArmSlideCommand extends CommandBase{
-    private final RobotArmSlideManipulator manipulator;
-    private final Supplier<Double>         speedSupplier;
+public class IntakeCommand extends CommandBase{
+    private final RobotIntakeManipulator manipulator;
+    private final Supplier<Double>       speedSupplier;
 
-    public ArmSlideCommand(
-        RobotArmSlideManipulator manipulator,
-        Supplier<Double>         speedSupplier )
+    public IntakeCommand(
+        RobotIntakeManipulator manipulator,
+        Supplier<Double>       speedSupplier )
     {
         this.manipulator   = manipulator;
         this.speedSupplier = speedSupplier;
@@ -22,7 +23,7 @@ public class ArmSlideCommand extends CommandBase{
 
     @Override
     public void execute() {
-        manipulator.slide( speedSupplier.get() );
+        manipulator.intake( speedSupplier.get() );
     }
 
     @Override

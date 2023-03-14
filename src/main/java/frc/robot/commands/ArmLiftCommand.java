@@ -1,8 +1,9 @@
-package frc.robot;
+package frc.robot.commands;
 
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.RobotArmLiftManipulator;
 
 public class ArmLiftCommand extends CommandBase{
     private final RobotArmLiftManipulator manipulator;

@@ -1,16 +1,17 @@
-package frc.robot;
+package frc.robot.commands;
 
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.RobotTurretSpinManipulator;
 
-public class IntakeCommand extends CommandBase{
-    private final RobotIntakeManipulator manipulator;
-    private final Supplier<Double>       speedSupplier;
+public class TurretSpinCommand extends CommandBase{
+    private final RobotTurretSpinManipulator manipulator;
+    private final Supplier<Double>           speedSupplier;
 
-    public IntakeCommand(
-        RobotIntakeManipulator manipulator,
-        Supplier<Double>       speedSupplier )
+    public TurretSpinCommand(
+        RobotTurretSpinManipulator manipulator,
+        Supplier<Double>           speedSupplier )
     {
         this.manipulator   = manipulator;
         this.speedSupplier = speedSupplier;
@@ -22,7 +23,7 @@ public class IntakeCommand extends CommandBase{
 
     @Override
     public void execute() {
-        manipulator.intake( speedSupplier.get() );
+        manipulator.spin( speedSupplier.get() );
     }
 
     @Override

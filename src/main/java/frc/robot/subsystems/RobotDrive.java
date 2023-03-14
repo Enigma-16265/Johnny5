@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.subsystems;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,7 +14,7 @@ public class RobotDrive extends SubsystemBase{
  
     private static final Logger log = LogManager.getLogger( RobotDrive.class );
 
-    enum DriveMode {
+    public enum DriveMode {
         ARCADE,
         TANK,
         CURVATURE
@@ -87,7 +87,7 @@ public class RobotDrive extends SubsystemBase{
         }
     }
 
-    void setMode( DriveMode mode )
+    public void setMode( DriveMode mode )
     {
         if ( this.mode != mode )
         {

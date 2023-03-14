@@ -1,8 +1,9 @@
-package frc.robot;
+package frc.robot.commands;
 
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.RobotDrive;
 
 public class GamepadCommand extends CommandBase{
     private final RobotDrive       robotDrive;
