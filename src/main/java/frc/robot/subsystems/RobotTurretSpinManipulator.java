@@ -17,13 +17,15 @@ public class RobotTurretSpinManipulator extends SubsystemBase {
 
     public static final int    TURRET_SPIN_CAN_ID       = 15;
     public static final double TURRET_SPIN_SCALE_FACTOR = 0.15;
+    public static final double ENCODER_POSITION_CONVERSION_FACTOR = 0.25;
 
     private CANSparkMax     turretSpin        = new CANSparkMax( TURRET_SPIN_CAN_ID, MotorType.kBrushless );
     private RelativeEncoder turretSpinEncoder = turretSpin.getEncoder();
 
     public RobotTurretSpinManipulator()
     {
-
+        turretSpinEncoder.setPosition( 0 );
+        turretSpinEncoder.setPositionConversionFactor( ENCODER_POSITION_CONVERSION_FACTOR );
     }
     
     public void spin( double speed ) {

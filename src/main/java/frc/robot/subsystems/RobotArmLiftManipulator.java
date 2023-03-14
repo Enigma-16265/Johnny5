@@ -18,7 +18,7 @@ public class RobotArmLiftManipulator extends SubsystemBase {
     public static final int    ARM_LIFT_CAN_ID                    = 16;
     public static final double ARM_LIFT_SCALE_FACTOR              = 0.10;
     public static final double ENCODER_POSITION_CONVERSION_FACTOR = 0.01;
-    public static final double PULLY_CIRCUMFERENCE                = Math.PI * 4.25;
+    public static final double PULLY_CIRCUMFERENCE                = Math.PI * 4.25; // inches
 
     private CANSparkMax     armLift           = new CANSparkMax( ARM_LIFT_CAN_ID, MotorType.kBrushless );
     private RelativeEncoder armLiftEncoder    = armLift.getEncoder();

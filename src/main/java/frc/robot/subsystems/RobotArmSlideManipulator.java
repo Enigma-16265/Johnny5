@@ -15,19 +15,26 @@ public class RobotArmSlideManipulator extends SubsystemBase
 {
     private static final Logger log = LogManager.getLogger( RobotArmSlideManipulator.class );
 
-    public static final int    ARM_SLIDE_CAN_ID       = 17;
-    public static final double ARM_SLIDE_SCALE_FACTOR = 0.10;
+    public static final int    ARM_SLIDE_CAN_ID                   = 17;
+    public static final double ARM_SLIDE_SCALE_FACTOR             = 0.10;
+    public static final double ENCODER_POSITION_CONVERSION_FACTOR = 0.0625;
+    public static final double PULLY_CIRCUMFERENCE                = Math.PI * 1.5; //inches
 
     private CANSparkMax     armSlide          = new CANSparkMax( ARM_SLIDE_CAN_ID, MotorType.kBrushless );
     private RelativeEncoder armSlideEncoder   = armSlide.getEncoder();
  
     public RobotArmSlideManipulator()
     {
-        
+        armSlideEncoder.setPosition( 0 );
+        armSlideEncoder.setPositionConversionFactor( ENCODER_POSITION_CONVERSION_FACTOR );
     }
 
     public void slide( double speed ) {
+
+        double rotationDistance = armLiftEncoder.getPosition() * PULLY_CIRCUMFERENCE;
+        
         log.trace( "Slide position: {} velocity: {}", armSlideEncoder.getPosition(), armSlideEncoder.getVelocity()  );
+        log.trace( "rotationDistance: {}", rotationDistance );
 
         double scaledSpeed = speed * ARM_SLIDE_SCALE_FACTOR;
 
