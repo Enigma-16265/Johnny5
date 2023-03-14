@@ -9,15 +9,15 @@
             <PatternLayout pattern='${patternLayout}' />
         </Console>
         <!-- File appender -->
-        <File name='file' fileName='johnny5.log'>
+        <!-- File name='file' fileName='johnny5.log'>
             <PatternLayout pattern='${patternLayout}' />
-        </File>
+        </File -->
     </Appenders>
     <Loggers>
         <!-- Root logger -->
         <Root level='debug' additivity='false'>
             <AppenderRef ref='console' />
-            <AppenderRef ref='file' />
+            <!-- AppenderRef ref='file' / -->
         </Root>
     </Loggers>
 </Configuration>
