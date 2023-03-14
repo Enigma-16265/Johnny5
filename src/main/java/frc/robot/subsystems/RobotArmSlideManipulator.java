@@ -15,7 +15,8 @@ public class RobotArmSlideManipulator extends SubsystemBase
 {
     private static final Logger log = LogManager.getLogger( RobotArmSlideManipulator.class );
 
-    public static final int ARM_SLIDE_CAN_ID   = 17;
+    public static final int    ARM_SLIDE_CAN_ID       = 17;
+    public static final double ARM_SLIDE_SCALE_FACTOR = 0.10;
 
     private CANSparkMax     armSlide          = new CANSparkMax( ARM_SLIDE_CAN_ID, MotorType.kBrushless );
     private RelativeEncoder armSlideEncoder   = armSlide.getEncoder();
@@ -26,7 +27,13 @@ public class RobotArmSlideManipulator extends SubsystemBase
     }
 
     public void slide( double speed ) {
-        armSlide.set(speed);
+        log.trace( "Slide position: {} velocity: {}", armSlideEncoder.getPosition(), armSlideEncoder.getVelocity()  );
+
+        double scaledSpeed = speed * ARM_SLIDE_SCALE_FACTOR;
+
+        log.trace( "Setting Speed: " + scaledSpeed );
+
+        armSlide.set( scaledSpeed );
     }
 
     public void simulationInit()

@@ -15,21 +15,26 @@ public class RobotArmLiftManipulator extends SubsystemBase {
 
     private static final Logger log = LogManager.getLogger( RobotArmLiftManipulator.class );
 
-    public static final int    ARM_LIFT_CAN_ID       = 16;
-    public static final double ARM_LIFT_SCALE_FACTOR = 0.10;
+    public static final int    ARM_LIFT_CAN_ID                    = 16;
+    public static final double ARM_LIFT_SCALE_FACTOR              = 0.10;
+    public static final double ENCODER_POSITION_CONVERSION_FACTOR = 0.01;
+    public static final double PULLY_CIRCUMFERENCE                = Math.PI * 4.25;
 
     private CANSparkMax     armLift           = new CANSparkMax( ARM_LIFT_CAN_ID, MotorType.kBrushless );
     private RelativeEncoder armLiftEncoder    = armLift.getEncoder();
 
     public RobotArmLiftManipulator()
     {
-
+        armLiftEncoder.setPosition( 0 );
+        armLiftEncoder.setPositionConversionFactor( ENCODER_POSITION_CONVERSION_FACTOR );
     }
 
     public void lift( double speed )
     {
+        double rotationDistance = armLiftEncoder.getPosition() * PULLY_CIRCUMFERENCE;
 
-        log.trace( "Lift position: {} velocity: {}", armLiftEncoder.getPosition(), armLiftEncoder.getVelocity()  );
+        log.debug( "Lift position: {} velocity: {}", armLiftEncoder.getPosition(), armLiftEncoder.getVelocity()  );
+        log.debug( "rotationDistance: {}", rotationDistance );
 
         double scaledSpeed = speed * ARM_LIFT_SCALE_FACTOR;
 
