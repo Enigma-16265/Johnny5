@@ -39,6 +39,7 @@ public class RobotTurretSpinManipulator extends SubsystemBase {
 
     public void simulationInit()
     {
+        log.info( "subsystem sim init" );
         REVPhysicsSim.getInstance().addSparkMax( turretSpin, DCMotor.getNEO( 1 ) );
     }
 

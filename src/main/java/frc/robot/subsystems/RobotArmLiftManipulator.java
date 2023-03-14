@@ -40,6 +40,7 @@ public class RobotArmLiftManipulator extends SubsystemBase {
 
     public void simulationInit()
     {
+        log.info( "subsystem sim init" );
         REVPhysicsSim.getInstance().addSparkMax( armLift, DCMotor.getNEO( 1 ) );
     }
 
