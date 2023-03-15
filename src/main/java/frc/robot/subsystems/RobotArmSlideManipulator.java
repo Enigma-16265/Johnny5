@@ -16,7 +16,7 @@ public class RobotArmSlideManipulator extends SubsystemBase
     private static final Logger log = LogManager.getLogger( RobotArmSlideManipulator.class );
 
     public static final int    ARM_SLIDE_CAN_ID                   = 17;
-    public static final double ARM_SLIDE_SCALE_FACTOR             = 0.10;
+    public static final double ARM_SLIDE_SCALE_FACTOR             = 0.50;
     public static final double ENCODER_POSITION_CONVERSION_FACTOR = 0.0625;
     public static final double PULLY_CIRCUMFERENCE                = Math.PI * 1.5; //inches
     public static final double  MAX_ROTATION_DISTANCE             = PULLY_CIRCUMFERENCE * 6;

@@ -74,7 +74,7 @@ public class RobotDrive extends SubsystemBase{
         switch( mode ) {
           case ARCADE:
           default:
-          diffDrive.arcadeDrive( -leftYAxisSpeed, leftXAxisSpeed );
+          diffDrive.arcadeDrive( -leftYAxisSpeed, rightXAxisSpeed );
           break;
     
           case TANK:
