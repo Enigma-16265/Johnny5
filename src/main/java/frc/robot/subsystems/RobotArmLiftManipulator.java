@@ -29,16 +29,21 @@ public class RobotArmLiftManipulator extends SubsystemBase {
         armLiftEncoder.setPositionConversionFactor( ENCODER_POSITION_CONVERSION_FACTOR );
     }
 
+    private int cnt = 1;
     public void lift( double speed )
     {
         double rotationDistance = armLiftEncoder.getPosition() * PULLY_CIRCUMFERENCE;
 
-        log.debug( "Lift position: {} velocity: {}", armLiftEncoder.getPosition(), armLiftEncoder.getVelocity()  );
-        log.debug( "rotationDistance: {}", rotationDistance );
+        if ( ( cnt % 20 ) == 0 )
+        {
+          log.debug( "Lift position: {} velocity: {}", armLiftEncoder.getPosition(), armLiftEncoder.getVelocity()  );
+          log.debug( "rotationDistance: {}", rotationDistance );
+        }
+        cnt++;
 
         double scaledSpeed = speed * ARM_LIFT_SCALE_FACTOR;
 
-        log.trace( "Setting Speed: " + scaledSpeed );
+        //log.trace( "Setting Speed: " + scaledSpeed );
 
         armLift.set( scaledSpeed );
     }
