@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.cameraserver.CameraServer;
 
 /**
  * The VM is configured to automatically run this class. If you change the name of this class or the
@@ -25,6 +26,7 @@ public class Robot extends TimedRobot {
   {
       log.info( "roboInit" );
       robotContainer = new RobotContainer();
+      CameraServer.startAutomaticCapture();
   }
 
   @Override
@@ -66,5 +68,4 @@ public class Robot extends TimedRobot {
   {
     
   }
-
 }
