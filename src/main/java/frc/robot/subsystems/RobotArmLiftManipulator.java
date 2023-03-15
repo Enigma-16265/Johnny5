@@ -19,6 +19,7 @@ public class RobotArmLiftManipulator extends SubsystemBase {
     public static final double ARM_LIFT_SCALE_FACTOR              = 0.10;
     public static final double ENCODER_POSITION_CONVERSION_FACTOR = 0.01;
     public static final double PULLY_CIRCUMFERENCE                = Math.PI * 4.25; // inches
+    public static final double MAX_ROTATION_DISTANCE              = PULLY_CIRCUMFERENCE * 3;
 
     private CANSparkMax     armLift           = new CANSparkMax( ARM_LIFT_CAN_ID, MotorType.kBrushless );
     private RelativeEncoder armLiftEncoder    = armLift.getEncoder();
@@ -33,19 +34,45 @@ public class RobotArmLiftManipulator extends SubsystemBase {
     public void lift( double speed )
     {
         double rotationDistance = armLiftEncoder.getPosition() * PULLY_CIRCUMFERENCE;
-
-        if ( ( cnt % 20 ) == 0 )
+        double scaledSpeed      = speed * ARM_LIFT_SCALE_FACTOR;
+        
+        if ( ( cnt % 50 ) == 0 )
         {
-          log.debug( "Lift position: {} velocity: {}", armLiftEncoder.getPosition(), armLiftEncoder.getVelocity()  );
-          log.debug( "rotationDistance: {}", rotationDistance );
+          log.debug( "\n"+
+                     "position: {}\n" + 
+                     "velocity: {}\n" +
+                     "rotationDistance: {}\n" +
+                     "speed: {}\n"+
+                     "scaledSpeed: {}", 
+                     armLiftEncoder.getPosition(), 
+                     armLiftEncoder.getVelocity(),
+                     rotationDistance,
+                     speed,
+                     scaledSpeed );
         }
         cnt++;
 
-        double scaledSpeed = speed * ARM_LIFT_SCALE_FACTOR;
+        boolean allowSet = false;
+        if ( speed < 0.0 )
+        {
+            if ( rotationDistance >= 0 )
+            {
+                allowSet = true;
+            }
+        }
+        else
+        {
+            if ( rotationDistance <= MAX_ROTATION_DISTANCE )
+            {
+                allowSet = true;
+            }
+        }
 
-        //log.trace( "Setting Speed: " + scaledSpeed );
+        if ( allowSet )
+        {
+            armLift.set( scaledSpeed );
+        }
 
-        armLift.set( scaledSpeed );
     }
 
     public void simulationInit()
