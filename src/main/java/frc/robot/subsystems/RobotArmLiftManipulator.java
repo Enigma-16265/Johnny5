@@ -15,11 +15,12 @@ public class RobotArmLiftManipulator extends SubsystemBase {
 
     private static final Logger log = LogManager.getLogger( RobotArmLiftManipulator.class );
 
-    public static final int    ARM_LIFT_CAN_ID                    = 16;
-    public static final double ARM_LIFT_SCALE_FACTOR              = 0.10;
-    public static final double ENCODER_POSITION_CONVERSION_FACTOR = 0.01;
-    public static final double PULLY_CIRCUMFERENCE                = Math.PI * 4.25; // inches
-    public static final double MAX_ROTATION_DISTANCE              = PULLY_CIRCUMFERENCE * 3;
+    public static final int     ARM_LIFT_CAN_ID                    = 16;
+    public static final double  ARM_LIFT_SCALE_FACTOR              = 0.60;
+    public static final double  ENCODER_POSITION_CONVERSION_FACTOR = 0.01;
+    public static final double  PULLY_CIRCUMFERENCE                = Math.PI * 4.25; // inches
+    public static final double  MAX_ROTATION_DISTANCE              = PULLY_CIRCUMFERENCE * 3;
+    public static final boolean ENFORCE_LIMITS                     = false;
 
     private CANSparkMax     armLift           = new CANSparkMax( ARM_LIFT_CAN_ID, MotorType.kBrushless );
     private RelativeEncoder armLiftEncoder    = armLift.getEncoder();
@@ -38,7 +39,7 @@ public class RobotArmLiftManipulator extends SubsystemBase {
         
         if ( ( cnt % 50 ) == 0 )
         {
-          log.debug( "\n"+
+          log.trace( "\n"+
                      "position: {}\n" + 
                      "velocity: {}\n" +
                      "rotationDistance: {}\n" +
@@ -52,20 +53,34 @@ public class RobotArmLiftManipulator extends SubsystemBase {
         }
         cnt++;
 
-        boolean allowSet = false;
-        if ( speed < 0.0 )
+        boolean allowSet = true;
+        if ( ENFORCE_LIMITS )
         {
-            if ( rotationDistance >= 0 )
+
+            allowSet = false;
+            if ( speed < 0.0 )
             {
-                allowSet = true;
+                if ( rotationDistance >= 0 )
+                {
+                    allowSet = true;
+                }
+                else
+                {
+                    log.debug( "Negative set Disallowed" );
+                }
             }
-        }
-        else
-        {
-            if ( rotationDistance <= MAX_ROTATION_DISTANCE )
+            else
             {
-                allowSet = true;
+                if ( rotationDistance <= MAX_ROTATION_DISTANCE )
+                {
+                    allowSet = true;
+                }
+                else
+                {
+                    log.debug( "Positive set Disallowed" );
+                }
             }
+
         }
 
         if ( allowSet )

@@ -19,6 +19,8 @@ public class RobotArmSlideManipulator extends SubsystemBase
     public static final double ARM_SLIDE_SCALE_FACTOR             = 0.10;
     public static final double ENCODER_POSITION_CONVERSION_FACTOR = 0.0625;
     public static final double PULLY_CIRCUMFERENCE                = Math.PI * 1.5; //inches
+    public static final double  MAX_ROTATION_DISTANCE             = PULLY_CIRCUMFERENCE * 6;
+    public static final boolean ENFORCE_LIMITS                    = false;
 
     private CANSparkMax     armSlide          = new CANSparkMax( ARM_SLIDE_CAN_ID, MotorType.kBrushless );
     private RelativeEncoder armSlideEncoder   = armSlide.getEncoder();
@@ -29,18 +31,62 @@ public class RobotArmSlideManipulator extends SubsystemBase
         armSlideEncoder.setPositionConversionFactor( ENCODER_POSITION_CONVERSION_FACTOR );
     }
 
+    private int cnt = 1;
     public void slide( double speed ) {
-
         double rotationDistance = armSlideEncoder.getPosition() * PULLY_CIRCUMFERENCE;
+        double scaledSpeed      = speed * ARM_SLIDE_SCALE_FACTOR;
         
-        log.trace( "Slide position: {} velocity: {}", armSlideEncoder.getPosition(), armSlideEncoder.getVelocity()  );
-        log.trace( "rotationDistance: {}", rotationDistance );
+        if ( ( cnt % 50 ) == 0 )
+        {
+          log.debug( "\n"+
+                     "position: {}\n" + 
+                     "velocity: {}\n" +
+                     "rotationDistance: {}\n" +
+                     "speed: {}\n"+
+                     "scaledSpeed: {}", 
+                     armSlideEncoder.getPosition(), 
+                     armSlideEncoder.getVelocity(),
+                     rotationDistance,
+                     speed,
+                     scaledSpeed );
+        }
+        cnt++;
 
-        double scaledSpeed = speed * ARM_SLIDE_SCALE_FACTOR;
+        boolean allowSet = true;
+        if ( ENFORCE_LIMITS )
+        {
 
-        log.trace( "Setting Speed: " + scaledSpeed );
+            allowSet = false;
+            if ( speed < 0.0 )
+            {
+                if ( rotationDistance >= 0 )
+                {
+                    allowSet = true;
+                }
+                else
+                {
+                    log.debug( "Negative set Disallowed" );
+                }
+            }
+            else
+            {
+                if ( rotationDistance <= MAX_ROTATION_DISTANCE )
+                {
+                    allowSet = true;
+                }
+                else
+                {
+                    log.debug( "Positive set Disallowed" );
+                }
+            }
 
-        armSlide.set( scaledSpeed );
+        }
+
+        if ( allowSet )
+        {
+            armSlide.set( scaledSpeed );
+        }
+
     }
 
     public void simulationInit()
