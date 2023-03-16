@@ -117,4 +117,9 @@ public class RobotDrive extends SubsystemBase{
             log.info( "Set Drive Mode: " + mode );
         }
     }
+
+    public void setDefaultMode()
+    {
+      this.mode = DEFAULT_DRIVE_MODE;
+    }
 }
