@@ -82,7 +82,7 @@ public class RobotDrive extends SubsystemBase{
           break;
     
           case CURVATURE:
-          diffDrive.curvatureDrive( -leftYAxisSpeed, -rightXAxisSpeed, false );
+          diffDrive.curvatureDrive( -leftYAxisSpeed, -rightXAxisSpeed, true );
           break;
         }
     }
