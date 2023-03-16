@@ -35,6 +35,12 @@ public class RobotDrive extends SubsystemBase{
     private static final double COUNTS_PER_REV        = 1440.0;
     private static final double WHEEL_DIAMATER_IN     = 6.5;
 
+    public static final double  ARCADE_X_SCALE_FACTOR    = 0.75;
+    public static final double  ARCADE_Y_SCALE_FACTOR    = 0.90;
+    public static final double  TANK_SCALE_FACTOR        = 0.90;
+    public static final double  CURVATURE_X_SCALE_FACTOR = 0.75;
+    public static final double  CURVATURE_Y_SCALE_FACTOR = 0.90;
+
     private MotorControllerGroup leftMotors = 
         new MotorControllerGroup( new WPI_VictorSPX( LEFT_MOTOR_FRONT_CAN_ID ),
                                   new WPI_VictorSPX( LEFT_MOTOR_REAR_CAN_ID  ) );
@@ -73,16 +79,32 @@ public class RobotDrive extends SubsystemBase{
                        double rightYAxisSpeed ) {
         switch( mode ) {
           case ARCADE:
-          default:
-          diffDrive.arcadeDrive( -leftYAxisSpeed, rightXAxisSpeed );
+          default:{
+
+            double scaledYSpeed = leftYAxisSpeed * ARCADE_X_SCALE_FACTOR;
+            double scaledXSpeed = rightXAxisSpeed * ARCADE_Y_SCALE_FACTOR;
+
+            diffDrive.arcadeDrive( -scaledYSpeed, scaledXSpeed );
+          }
           break;
     
-          case TANK:
-          diffDrive.tankDrive( -leftYAxisSpeed, -rightYAxisSpeed );
+          case TANK: {
+
+            double scaledYSpeed = leftYAxisSpeed * TANK_SCALE_FACTOR;
+            double scaledXSpeed = rightYAxisSpeed * TANK_SCALE_FACTOR;
+
+            diffDrive.tankDrive( -scaledYSpeed, -scaledXSpeed );
+          }
           break;
     
           case CURVATURE:
-          diffDrive.curvatureDrive( -leftYAxisSpeed, -rightXAxisSpeed, true );
+          {
+
+            double scaledYSpeed = leftYAxisSpeed * CURVATURE_X_SCALE_FACTOR;
+            double scaledXSpeed = rightXAxisSpeed * CURVATURE_Y_SCALE_FACTOR;
+
+            diffDrive.curvatureDrive( -scaledYSpeed, -scaledXSpeed, true );
+          }
           break;
         }
     }
