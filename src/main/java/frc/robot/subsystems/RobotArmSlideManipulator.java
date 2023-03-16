@@ -38,7 +38,7 @@ public class RobotArmSlideManipulator extends SubsystemBase
         
         if ( ( cnt % 50 ) == 0 )
         {
-          log.debug( "\n"+
+          log.trace( "\n"+
                      "position: {}\n" + 
                      "velocity: {}\n" +
                      "rotationDistance: {}\n" +

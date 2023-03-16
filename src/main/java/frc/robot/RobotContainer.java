@@ -5,6 +5,7 @@ import com.revrobotics.REVPhysicsSim;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.ArmLiftCommand;
 import frc.robot.commands.ArmSlideCommand;
+import frc.robot.commands.AutoDriveCommand;
 import frc.robot.commands.GamepadCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.TurretSpinCommand;
@@ -65,6 +66,8 @@ public class RobotContainer {
     private final RobotIntakeManipulator     robotIntakeManipulator     = new RobotIntakeManipulator();
     private final IntakeCommand              intakeCommand;
 
+    private final AutoDriveCommand           autoDriveCommand;
+
     public RobotContainer() {
 
         gamepadCommand = new GamepadCommand( robotDrive,
@@ -96,6 +99,8 @@ public class RobotContainer {
         } );
         robotIntakeManipulator.setDefaultCommand( intakeCommand );
 
+        autoDriveCommand = new AutoDriveCommand( robotDrive );
+
         //configureButtonBindings();
     }
 
@@ -122,5 +127,18 @@ public class RobotContainer {
     public void simulationPeriodic()
     {
         REVPhysicsSim.getInstance().run();
+    }
+
+    public void autonomousInit()
+    {
+        autoDriveCommand.schedule();
+    }
+
+    public void autonomousCancel()
+    {
+        if ( autoDriveCommand.isScheduled() )
+        {
+            autoDriveCommand.cancel();
+        }
     }
 }

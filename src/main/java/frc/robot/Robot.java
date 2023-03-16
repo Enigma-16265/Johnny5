@@ -41,6 +41,17 @@ public class Robot extends TimedRobot {
   }
 
   @Override
+  public void testPeriodic() {
+
+  }
+
+  @Override
+  public void teleopInit() {
+    log.info( "roboInit" );
+    robotContainer.autonomousCancel();
+  }
+
+  @Override
   public void teleopPeriodic() {
     robotContainer.modeCheck();
   }
@@ -61,6 +72,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit()
   {
     log.info( "autonomousInit" );
+    robotContainer.autonomousInit();
   }
 
   @Override
