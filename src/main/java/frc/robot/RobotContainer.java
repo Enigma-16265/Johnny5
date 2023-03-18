@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.ArmLiftCommand;
 import frc.robot.commands.ArmSlideCommand;
 import frc.robot.commands.AutoDriveCommand;
-import frc.robot.commands.GamepadCommand;
+import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.TurretSpinCommand;
 import frc.robot.subsystems.RobotArmLiftManipulator;
@@ -48,9 +48,9 @@ public class RobotContainer {
         public static final int Y_BUTTON_ID        = 4;
     }
 
-    private final Joystick       gamepad      = new Joystick( JOYSTICK_0.PORT );
-    private final RobotDrive     robotDrive   = new RobotDrive();
-    private final GamepadCommand gamepadCommand;
+    private final Joystick     gamepad      = new Joystick( JOYSTICK_0.PORT );
+    private final RobotDrive   robotDrive   = new RobotDrive();
+    private final DriveCommand driveCommand;
     
     private final Joystick                   gamepadManipulator         = new Joystick( JOYSTICK_1.PORT );
 
@@ -70,12 +70,12 @@ public class RobotContainer {
 
     public RobotContainer() {
 
-        gamepadCommand = new GamepadCommand( robotDrive,
-                                             () -> gamepad.getRawAxis( JOYSTICK_0.LEFT_X_AXIS_PORT  ),
-                                             () -> gamepad.getRawAxis( JOYSTICK_0.LEFT_Y_AXIS_PORT  ),
-                                             () -> gamepad.getRawAxis( JOYSTICK_0.RIGHT_X_AXIS_PORT ),
-                                             () -> gamepad.getRawAxis( JOYSTICK_0.RIGHT_Y_AXIS_PORT ) );       
-        robotDrive.setDefaultCommand( gamepadCommand );
+        driveCommand = new DriveCommand( robotDrive,
+                                         () -> gamepad.getRawAxis( JOYSTICK_0.LEFT_X_AXIS_PORT  ),
+                                         () -> gamepad.getRawAxis( JOYSTICK_0.LEFT_Y_AXIS_PORT  ),
+                                         () -> gamepad.getRawAxis( JOYSTICK_0.RIGHT_X_AXIS_PORT ),
+                                         () -> gamepad.getRawAxis( JOYSTICK_0.RIGHT_Y_AXIS_PORT ) );       
+        robotDrive.setDefaultCommand( driveCommand );
         
         armLiftCommand = new ArmLiftCommand( robotArmLiftManipulator,
                                              () -> -gamepadManipulator.getRawAxis( JOYSTICK_1.LEFT_Y_AXIS_PORT ) );

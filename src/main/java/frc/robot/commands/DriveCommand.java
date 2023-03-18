@@ -5,14 +5,14 @@ import java.util.function.Supplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.RobotDrive;
 
-public class GamepadCommand extends CommandBase{
+public class DriveCommand extends CommandBase{
     private final RobotDrive       robotDrive;
     private final Supplier<Double> leftXAxisInput;
     private final Supplier<Double> leftYAxisInput;
     private final Supplier<Double> rightXAxisInput;
     private final Supplier<Double> rightYAxisInput;
 
-    public GamepadCommand(
+    public DriveCommand(
         RobotDrive       robotDrive,
         Supplier<Double> leftXAxisInput,
         Supplier<Double> leftYAxisInput,
