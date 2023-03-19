@@ -5,10 +5,12 @@ import org.apache.logging.log4j.Logger;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.logging.Log;
 
 public class RobotDrive extends SubsystemBase{
  
@@ -66,12 +68,12 @@ public class RobotDrive extends SubsystemBase{
         resetEncoders();
 
         log.info( "Inital Drive Mode: " + mode );
-    };
+    }
 
     public void resetEncoders() {
         leftEncoder.reset();
         rightEncoder.reset();
-    };
+    }
 
     public void drive( double leftXAxisSpeed,
                        double leftYAxisSpeed,

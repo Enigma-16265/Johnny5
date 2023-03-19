@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.revrobotics.REVPhysicsSim;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.ArmLiftCommand;
 import frc.robot.commands.ArmSlideCommand;
@@ -140,5 +141,10 @@ public class RobotContainer {
         {
             autoDriveCommand.cancel();
         }
+    }
+
+    public void close()
+    {
+
     }
 }

@@ -1,7 +1,8 @@
 package frc.robot.subsystems;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.DoubleTopic;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVPhysicsSim;
@@ -10,10 +11,15 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.logging.Log;
+import frc.robot.logging.LogManager;
 
 public class RobotArmLiftManipulator extends SubsystemBase {
 
-    private static final Logger log = LogManager.getLogger( RobotArmLiftManipulator.class );
+    private static final Log log = LogManager.getLogger( RobotArmLiftManipulator.class );
+
+    final DoublePublisher positionPublisher;
+    final DoublePublisher velocityPublisher;
 
     public static final int     ARM_LIFT_CAN_ID                    = 16;
     public static final double  ARM_LIFT_SCALE_FACTOR              = 0.60;
@@ -29,6 +35,10 @@ public class RobotArmLiftManipulator extends SubsystemBase {
     {
         armLiftEncoder.setPosition( 0 );
         armLiftEncoder.setPositionConversionFactor( ENCODER_POSITION_CONVERSION_FACTOR );
+
+        NetworkTableInstance inst = NetworkTableInstance.getDefault();
+        positionPublisher = inst.getDoubleTopic("/subsystems/ArmLift/position").publish();
+        velocityPublisher = inst.getDoubleTopic("/subsystems/ArmLift/velocity").publish();
     }
 
     private int cnt = 1;
@@ -39,12 +49,12 @@ public class RobotArmLiftManipulator extends SubsystemBase {
         
         if ( ( cnt % 50 ) == 0 )
         {
-          log.trace( "\n"+
-                     "position: {}\n" + 
-                     "velocity: {}\n" +
-                     "rotationDistance: {}\n" +
-                     "speed: {}\n"+
-                     "scaledSpeed: {}", 
+          log.fatal( "\n"+
+                     "position: %f\n" + 
+                     "velocity: %f\n" +
+                     "rotationDistance: %f\n" +
+                     "speed: %f\n"+
+                     "scaledSpeed: %f", 
                      armLiftEncoder.getPosition(), 
                      armLiftEncoder.getVelocity(),
                      rotationDistance,

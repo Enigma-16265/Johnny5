@@ -4,11 +4,10 @@
 
 package frc.robot;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.logging.Log;
+import frc.robot.logging.LogManager;
 import edu.wpi.first.cameraserver.CameraServer;
 
 /**
@@ -17,7 +16,12 @@ import edu.wpi.first.cameraserver.CameraServer;
  */
 public class Robot extends TimedRobot {
 
-  private static final Logger log = LogManager.getLogger( Robot.class );
+  static{
+    LogManager.setDefaultType( LogManager.Type.CONSOLE );
+    LogManager.setDefaultLogLevel( Log.Level.TRACE );
+  }
+
+  private static final Log log = LogManager.getLogger( Robot.class );
   
   private RobotContainer robotContainer;
   
@@ -26,7 +30,7 @@ public class Robot extends TimedRobot {
   {
       log.info( "roboInit" );
       robotContainer = new RobotContainer();
-      CameraServer.startAutomaticCapture();
+      //CameraServer.startAutomaticCapture();
   }
 
   @Override
@@ -80,4 +84,11 @@ public class Robot extends TimedRobot {
   {
     
   }
+
+  @Override
+  public void close()
+  {
+    robotContainer.close();
+  }
+
 }

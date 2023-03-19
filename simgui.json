@@ -47,7 +47,35 @@
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler"
     }
   },
+  "NetworkTables": {
+    "Retained Values": {
+      "open": false
+    },
+    "transitory": {
+      "CameraPublisher": {
+        "open": true
+      },
+      "subsystem": {
+        "arm_lift": {
+          "open": true
+        },
+        "open": true
+      }
+    }
+  },
   "NetworkTables Info": {
+    "Clients": {
+      "open": true
+    },
+    "Connections": {
+      "open": true
+    },
+    "Server": {
+      "Publishers": {
+        "open": true
+      },
+      "open": true
+    },
     "visible": true
   }
 }
