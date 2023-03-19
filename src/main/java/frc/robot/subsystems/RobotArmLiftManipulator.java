@@ -16,7 +16,7 @@ import frc.robot.logging.LogManager;
 
 public class RobotArmLiftManipulator extends SubsystemBase {
 
-    private static final Log log = LogManager.getLogger( RobotArmLiftManipulator.class );
+    private static final Log log = LogManager.getLogger( LogManager.Type.NETWORK_TABLES, "subsystems.ArmLift" );
 
     final DoublePublisher positionPublisher;
     final DoublePublisher velocityPublisher;

@@ -1,6 +1,7 @@
 package frc.robot.logging;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StringArrayPublisher;
 import edu.wpi.first.networktables.StringPublisher;
 
 public class NetworkTablesLog extends Log {
@@ -9,7 +10,7 @@ public class NetworkTablesLog extends Log {
 
     private NetworkTableInstance networkTableInstance;
     private String               name;
-    private StringPublisher      logPublisher;
+    private StringArrayPublisher logPublisher;
 
     public NetworkTablesLog( String name )
     {
@@ -17,14 +18,14 @@ public class NetworkTablesLog extends Log {
     
         this.name = name.replaceAll( "\\.", "/" );
         logPublisher = 
-            networkTableInstance.getStringTopic(
+            networkTableInstance.getStringArrayTopic(
                String.format( LOG_PUBLISHER_NAME_FORMAT, this.name ) ).publish();
     }
 
     @Override
     public void uncheckedLog( String message )
     {
-        logPublisher.set( message );
+        logPublisher.set( message.split( "\\R" ) );
     }
 
 }

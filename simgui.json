@@ -48,15 +48,33 @@
     }
   },
   "NetworkTables": {
-    "Retained Values": {
+    "Persistent Values": {
       "open": false
     },
     "transitory": {
       "CameraPublisher": {
         "open": true
       },
+      "frc": {
+        "open": true,
+        "robot": {
+          "open": true,
+          "subsystems": {
+            "RobotArmLiftManipulator": {
+              "open": true
+            },
+            "open": true
+          }
+        }
+      },
       "subsystem": {
         "arm_lift": {
+          "open": true
+        },
+        "open": true
+      },
+      "subsystems": {
+        "ArmLift": {
           "open": true
         },
         "open": true
@@ -72,6 +90,9 @@
     },
     "Server": {
       "Publishers": {
+        "open": true
+      },
+      "Subscribers": {
         "open": true
       },
       "open": true
