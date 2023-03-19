@@ -2,7 +2,6 @@ package frc.robot.logging;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringArrayPublisher;
-import edu.wpi.first.networktables.StringPublisher;
 
 public class NetworkTablesLog extends Log {
 
