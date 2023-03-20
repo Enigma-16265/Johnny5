@@ -1,20 +1,26 @@
 package frc.robot.subsystems;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.logging.DataNetworkTableLog;
 import frc.robot.logging.Log;
+import frc.robot.logging.LogManager;
 
 public class RobotDrive extends SubsystemBase{
  
-    private static final Logger log = LogManager.getLogger( RobotDrive.class );
+  private static final Log log = LogManager.getLogger( LogManager.Type.NETWORK_TABLES, "subsystems.RobotDrive" );
+
+  private static final DataNetworkTableLog dataLog =
+      new DataNetworkTableLog( 
+          "subsystems.RobotDrive",
+          Map.of( "leftCount",  DataNetworkTableLog.COLUMN_TYPE.INTEGER,
+                  "rightCount", DataNetworkTableLog.COLUMN_TYPE.INTEGER ) );
 
     public enum DriveMode {
         ARCADE,
@@ -75,11 +81,22 @@ public class RobotDrive extends SubsystemBase{
         rightEncoder.reset();
     }
 
+    private int cnt = 1;
     public void drive( double leftXAxisSpeed,
                        double leftYAxisSpeed,
                        double rightXAxisSpeed,
-                       double rightYAxisSpeed ) {
-        switch( mode ) {
+                       double rightYAxisSpeed )
+    {
+
+      if ( ( cnt % 10 ) == 0 )
+        {
+            dataLog.publish( "leftCount",  (long) leftEncoder.get() );
+            dataLog.publish( "rightCOunt", (long) rightEncoder.get() );
+        }
+        cnt++;
+
+        switch( mode )
+        {
           case ARCADE:
           default:{
 

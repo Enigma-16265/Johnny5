@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.Map;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVPhysicsSim;
@@ -10,10 +9,22 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.logging.DataNetworkTableLog;
+import frc.robot.logging.Log;
+import frc.robot.logging.LogManager;
 
 public class RobotArmSlideManipulator extends SubsystemBase
 {
-    private static final Logger log = LogManager.getLogger( RobotArmSlideManipulator.class );
+    private static final Log log = LogManager.getLogger( LogManager.Type.NETWORK_TABLES, "subsystems.ArmSlide" );
+
+    private static final DataNetworkTableLog dataLog =
+        new DataNetworkTableLog( 
+            "subsystems.ArmSlide",
+            Map.of( "position",         DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
+                    "velocity",         DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
+                    "rotationDistance", DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
+                    "speed",            DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
+                    "scaledSpeed",      DataNetworkTableLog.COLUMN_TYPE.DOUBLE ) );
 
     public static final int    ARM_SLIDE_CAN_ID                   = 17;
     public static final double ARM_SLIDE_SCALE_FACTOR             = 0.50;
@@ -36,19 +47,13 @@ public class RobotArmSlideManipulator extends SubsystemBase
         double rotationDistance = armSlideEncoder.getPosition() * PULLY_CIRCUMFERENCE;
         double scaledSpeed      = speed * ARM_SLIDE_SCALE_FACTOR;
         
-        if ( ( cnt % 50 ) == 0 )
+        if ( ( cnt % 10 ) == 0 )
         {
-          log.trace( "\n"+
-                     "position: {}\n" + 
-                     "velocity: {}\n" +
-                     "rotationDistance: {}\n" +
-                     "speed: {}\n"+
-                     "scaledSpeed: {}", 
-                     armSlideEncoder.getPosition(), 
-                     armSlideEncoder.getVelocity(),
-                     rotationDistance,
-                     speed,
-                     scaledSpeed );
+            dataLog.publish( "position",         armSlideEncoder.getPosition() );
+            dataLog.publish( "velocity",         armSlideEncoder.getVelocity() );
+            dataLog.publish( "rotationDistance", rotationDistance );
+            dataLog.publish( "speed",            speed );
+            dataLog.publish( "scaledSpeed",      scaledSpeed );
         }
         cnt++;
 

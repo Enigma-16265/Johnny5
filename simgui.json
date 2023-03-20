@@ -48,7 +48,7 @@
     }
   },
   "NetworkTables": {
-    "Persistent Values": {
+    "Retained Values": {
       "open": false
     },
     "transitory": {
@@ -75,6 +75,9 @@
       },
       "subsystems": {
         "ArmLift": {
+          "open": true
+        },
+        "RobotDrive": {
           "open": true
         },
         "open": true

@@ -1,8 +1,6 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.DoublePublisher;
-import edu.wpi.first.networktables.DoubleTopic;
+import java.util.Map;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVPhysicsSim;
@@ -11,6 +9,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.logging.DataNetworkTableLog;
 import frc.robot.logging.Log;
 import frc.robot.logging.LogManager;
 
@@ -18,8 +17,14 @@ public class RobotArmLiftManipulator extends SubsystemBase {
 
     private static final Log log = LogManager.getLogger( LogManager.Type.NETWORK_TABLES, "subsystems.ArmLift" );
 
-    final DoublePublisher positionPublisher;
-    final DoublePublisher velocityPublisher;
+    private static final DataNetworkTableLog dataLog =
+        new DataNetworkTableLog( 
+            "subsystems.ArmLift",
+            Map.of( "position",         DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
+                    "velocity",         DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
+                    "rotationDistance", DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
+                    "speed",            DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
+                    "scaledSpeed",      DataNetworkTableLog.COLUMN_TYPE.DOUBLE ) );
 
     public static final int     ARM_LIFT_CAN_ID                    = 16;
     public static final double  ARM_LIFT_SCALE_FACTOR              = 0.60;
@@ -35,10 +40,6 @@ public class RobotArmLiftManipulator extends SubsystemBase {
     {
         armLiftEncoder.setPosition( 0 );
         armLiftEncoder.setPositionConversionFactor( ENCODER_POSITION_CONVERSION_FACTOR );
-
-        NetworkTableInstance inst = NetworkTableInstance.getDefault();
-        positionPublisher = inst.getDoubleTopic("/subsystems/ArmLift/position").publish();
-        velocityPublisher = inst.getDoubleTopic("/subsystems/ArmLift/velocity").publish();
     }
 
     private int cnt = 1;
@@ -47,19 +48,13 @@ public class RobotArmLiftManipulator extends SubsystemBase {
         double rotationDistance = armLiftEncoder.getPosition() * PULLY_CIRCUMFERENCE;
         double scaledSpeed      = speed * ARM_LIFT_SCALE_FACTOR;
         
-        if ( ( cnt % 50 ) == 0 )
+        if ( ( cnt % 10 ) == 0 )
         {
-          log.fatal( "\n"+
-                     "position: %f\n" + 
-                     "velocity: %f\n" +
-                     "rotationDistance: %f\n" +
-                     "speed: %f\n"+
-                     "scaledSpeed: %f", 
-                     armLiftEncoder.getPosition(), 
-                     armLiftEncoder.getVelocity(),
-                     rotationDistance,
-                     speed,
-                     scaledSpeed );
+            dataLog.publish( "position", armLiftEncoder.getPosition() );
+            dataLog.publish( "velocity", armLiftEncoder.getVelocity() );
+            dataLog.publish( "rotationDistance", rotationDistance );
+            dataLog.publish( "speed", speed );
+            dataLog.publish( "scaledSpeed", scaledSpeed );
         }
         cnt++;
 
