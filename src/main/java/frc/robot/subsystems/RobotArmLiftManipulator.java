@@ -32,6 +32,8 @@ public class RobotArmLiftManipulator extends SubsystemBase {
     public static final double  PULLY_CIRCUMFERENCE                = Math.PI * 4.25; // inches
     public static final double  MAX_ROTATION_DISTANCE              = PULLY_CIRCUMFERENCE * 3;
     public static final boolean ENFORCE_LIMITS                     = false;
+    
+    public static final double  EPLISON                            = 0.01;
 
     private CANSparkMax     armLift           = new CANSparkMax( ARM_LIFT_CAN_ID, MotorType.kBrushless );
     private RelativeEncoder armLiftEncoder    = armLift.getEncoder();
@@ -58,37 +60,34 @@ public class RobotArmLiftManipulator extends SubsystemBase {
         }
         cnt++;
 
-        boolean allowSet = true;
         if ( ENFORCE_LIMITS )
         {
 
-            allowSet = false;
             if ( speed < 0.0 )
             {
-                if ( rotationDistance >= 0 )
+                if ( Math.abs( rotationDistance - 0.0 ) > EPLISON )
                 {
-                    allowSet = true;
+                    armLift.set( scaledSpeed );
                 }
                 else
                 {
-                    log.debug( "Negative set Disallowed" );
+                    armLift.set( 0.0 );
                 }
             }
             else
             {
-                if ( rotationDistance <= MAX_ROTATION_DISTANCE )
+                if ( Math.abs( MAX_ROTATION_DISTANCE - rotationDistance ) < EPLISON )
                 {
-                    allowSet = true;
+                    armLift.set( scaledSpeed );
                 }
                 else
                 {
-                    log.debug( "Positive set Disallowed" );
+                    armLift.set( 0 );
                 }
             }
 
         }
-
-        if ( allowSet )
+        else
         {
             armLift.set( scaledSpeed );
         }

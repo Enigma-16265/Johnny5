@@ -26,12 +26,14 @@ public class RobotArmSlideManipulator extends SubsystemBase
                     "speed",            DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
                     "scaledSpeed",      DataNetworkTableLog.COLUMN_TYPE.DOUBLE ) );
 
-    public static final int    ARM_SLIDE_CAN_ID                   = 17;
-    public static final double ARM_SLIDE_SCALE_FACTOR             = 0.50;
-    public static final double ENCODER_POSITION_CONVERSION_FACTOR = 0.0625;
-    public static final double PULLY_CIRCUMFERENCE                = Math.PI * 1.5; //inches
-    public static final double  MAX_ROTATION_DISTANCE             = PULLY_CIRCUMFERENCE * 6;
-    public static final boolean ENFORCE_LIMITS                    = false;
+    public static final int     ARM_SLIDE_CAN_ID                   = 17;
+    public static final double  ARM_SLIDE_SCALE_FACTOR             = 0.50;
+    public static final double  ENCODER_POSITION_CONVERSION_FACTOR = 0.0625;
+    public static final double  PULLY_CIRCUMFERENCE                = Math.PI * 1.5; //inches
+    public static final double  MAX_ROTATION_DISTANCE              = PULLY_CIRCUMFERENCE * 6;
+    public static final boolean ENFORCE_LIMITS                     = false;
+
+    public static final double  EPLISON                            = 0.01;
 
     private CANSparkMax     armSlide          = new CANSparkMax( ARM_SLIDE_CAN_ID, MotorType.kBrushless );
     private RelativeEncoder armSlideEncoder   = armSlide.getEncoder();
@@ -43,7 +45,8 @@ public class RobotArmSlideManipulator extends SubsystemBase
     }
 
     private int cnt = 1;
-    public void slide( double speed ) {
+    public void slide( double speed )
+    {
         double rotationDistance = armSlideEncoder.getPosition() * PULLY_CIRCUMFERENCE;
         double scaledSpeed      = speed * ARM_SLIDE_SCALE_FACTOR;
         
@@ -57,37 +60,34 @@ public class RobotArmSlideManipulator extends SubsystemBase
         }
         cnt++;
 
-        boolean allowSet = true;
         if ( ENFORCE_LIMITS )
         {
 
-            allowSet = false;
             if ( speed < 0.0 )
             {
-                if ( rotationDistance >= 0 )
+                if ( Math.abs( rotationDistance - 0.0 ) > EPLISON )
                 {
-                    allowSet = true;
+                    armSlide.set( scaledSpeed );
                 }
                 else
                 {
-                    log.debug( "Negative set Disallowed" );
+                    armSlide.set( 0.0 );
                 }
             }
             else
             {
-                if ( rotationDistance <= MAX_ROTATION_DISTANCE )
+                if ( Math.abs( MAX_ROTATION_DISTANCE - rotationDistance ) < EPLISON )
                 {
-                    allowSet = true;
+                    armSlide.set( scaledSpeed );
                 }
                 else
                 {
-                    log.debug( "Positive set Disallowed" );
+                    armSlide.set( 0 );
                 }
             }
 
         }
-
-        if ( allowSet )
+        else
         {
             armSlide.set( scaledSpeed );
         }
