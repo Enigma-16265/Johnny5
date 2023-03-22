@@ -79,7 +79,7 @@ public class RobotContainer {
         robotDrive.setDefaultCommand( driveCommand );
         
         armLiftCommand = new ArmLiftCommand( robotArmLiftManipulator,
-                                             () -> -gamepadManipulator.getRawAxis( JOYSTICK_1.LEFT_Y_AXIS_PORT ) );
+                                             () -> gamepadManipulator.getRawAxis( JOYSTICK_1.LEFT_Y_AXIS_PORT ) );
         robotArmLiftManipulator.setDefaultCommand( armLiftCommand );
 
         armSlideCommand = new ArmSlideCommand( robotArmSlideManipulator,

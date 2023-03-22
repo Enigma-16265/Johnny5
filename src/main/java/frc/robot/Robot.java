@@ -18,7 +18,7 @@ public class Robot extends TimedRobot {
 
   static{
     LogManager.setDefaultType( LogManager.Type.CONSOLE );
-    LogManager.setDefaultLogLevel( Log.Level.TRACE );
+    LogManager.setDefaultLogLevel( Log.Level.INFO );
   }
 
   private static final Log log = LogManager.getLogger( Robot.class );

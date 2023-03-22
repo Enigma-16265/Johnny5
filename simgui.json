@@ -77,9 +77,6 @@
         "ArmLift": {
           "open": true
         },
-        "RobotDrive": {
-          "open": true
-        },
         "open": true
       }
     }
