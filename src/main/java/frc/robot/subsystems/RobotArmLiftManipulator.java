@@ -63,11 +63,11 @@ public class RobotArmLiftManipulator extends SubsystemBase {
         
         if ( ( cnt % 10 ) == 0 )
         {
-            dataLog.publish( "position", armLiftEncoder.getPosition() );
-            dataLog.publish( "velocity", armLiftEncoder.getVelocity() );
+            dataLog.publish( "position",         armLiftEncoder.getPosition() );
+            dataLog.publish( "velocity",         armLiftEncoder.getVelocity() );
             dataLog.publish( "rotationDistance", rotationDistance );
-            dataLog.publish( "speed", speed );
-            dataLog.publish( "scaledSpeed", scaledSpeed );
+            dataLog.publish( "speed",            speed );
+            dataLog.publish( "scaledSpeed",      scaledSpeed );
 
             log.trace( "speed: " + speed + " rotationDistance: " + rotationDistance );
         }
@@ -83,12 +83,12 @@ public class RobotArmLiftManipulator extends SubsystemBase {
                 {
                     if ( Math.abs( MIN_ROTATION_DISTANCE - Math.abs( rotationDistance ) ) > EPLISON_DIST )
                     {
-                        log.info( "Lift Back" );
+                        log.trace( "Lift Back" );
                         armLift.set( scaledSpeed );
                     }
                     else
                     {
-                        log.info( "Limit Lift Back" );
+                        log.trace( "Limit Lift Back" );
                         armLift.set( ZERO_SPEED );
                     }
                 }
@@ -96,12 +96,12 @@ public class RobotArmLiftManipulator extends SubsystemBase {
                 {
                     if ( Math.abs( MAX_ROTATION_DISTANCE - Math.abs( rotationDistance ) ) > EPLISON_DIST )
                     {
-                        log.info( "Lift Forward" );
+                        log.trace( "Lift Forward" );
                         armLift.set( scaledSpeed );
                     }
                     else
                     {
-                        log.info( "Limit Lift Forward" );
+                        log.trace( "Limit Lift Forward" );
                         armLift.set( ZERO_SPEED );
                     }
                 }
