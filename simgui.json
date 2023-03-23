@@ -74,6 +74,9 @@
         "open": true
       },
       "subsystems": {
+        "ArmLift": {
+          "open": true
+        },
         "ArmSlide": {
           "open": true
         },

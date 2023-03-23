@@ -40,7 +40,7 @@ public class RobotContainer {
         public static final int LEFT_X_AXIS_PORT   = 0;
         public static final int LEFT_Y_AXIS_PORT   = 1;
         public static final int RIGHT_X_AXIS_PORT  = 4;
-        public static final int RIGHT_Y_AXIS_PORT  = 3;//5;
+        public static final int RIGHT_Y_AXIS_PORT  = 5;
         public static final int LEFT_TRIGGER_PORT  = 2;
         public static final int RIGHT_TRIGGER_PORT = 3;
         public static final int A_BUTTON_ID        = 1;

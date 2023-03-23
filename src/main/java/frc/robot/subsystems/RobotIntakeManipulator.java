@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,10 +11,16 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.logging.DataNetworkTableLog;
 
 public class RobotIntakeManipulator extends SubsystemBase
 {
     private static final Logger log = LogManager.getLogger( RobotIntakeManipulator.class );
+
+    private static final DataNetworkTableLog dataLog =
+    new DataNetworkTableLog( 
+        "subsystems.Intake",
+        Map.of( "speed", DataNetworkTableLog.COLUMN_TYPE.DOUBLE ) );
 
     public static final int INTAKE_CAN_ID = 18;
 
@@ -23,8 +31,10 @@ public class RobotIntakeManipulator extends SubsystemBase
 
     }
 
-    public void intake( double speed ) {
-        armIntake.set(speed);
+    public void intake( double speed )
+    {
+        dataLog.publish( "speed", speed );
+        armIntake.set( speed );
     }
 
     public void simulationInit()
