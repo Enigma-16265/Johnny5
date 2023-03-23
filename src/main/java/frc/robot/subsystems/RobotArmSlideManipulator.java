@@ -17,6 +17,15 @@ public class RobotArmSlideManipulator extends SubsystemBase
 {
     private static final Log log = LogManager.getLogger( "subsystems.ArmSlide" );
 
+    enum SLIDE_STATE {
+        OPEN,
+        IN_LIMIT,
+        IN,
+        NEUTRAL,
+        OUT,
+        OUT_LIMIT
+    }
+
     private static final DataNetworkTableLog dataLog =
         new DataNetworkTableLog( 
             "subsystems.ArmSlide",
@@ -25,8 +34,7 @@ public class RobotArmSlideManipulator extends SubsystemBase
                     "rotationDistance", DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
                     "speed",            DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
                     "scaledSpeed",      DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
-                    "limitDown",        DataNetworkTableLog.COLUMN_TYPE.BYTE,
-                    "limitUp",          DataNetworkTableLog.COLUMN_TYPE.BYTE ) );
+                    "slideState",       DataNetworkTableLog.COLUMN_TYPE.STRING ) );
 
     public static final int     ARM_SLIDE_CAN_ID                   = 17;
     public static final double  ARM_SLIDE_SCALE_FACTOR             = 0.50;
@@ -59,15 +67,15 @@ public class RobotArmSlideManipulator extends SubsystemBase
         
         if ( ( cnt % 10 ) == 0 )
         {
-            dataLog.publish( "position",         armSlideEncoder.getPosition() );
-            dataLog.publish( "velocity",         armSlideEncoder.getVelocity() );
-            dataLog.publish( "rotationDistance", rotationDistance );
-            dataLog.publish( "speed",            speed );
-            dataLog.publish( "scaledSpeed",      scaledSpeed );
-
-            log.info( "speed: " + speed + " rotationDistance: " + rotationDistance );
+            log.trace( "speed: " + speed + " rotationDistance: " + rotationDistance );
         }
         cnt++;
+
+        dataLog.publish( "position",         armSlideEncoder.getPosition() );
+        dataLog.publish( "velocity",         armSlideEncoder.getVelocity() );
+        dataLog.publish( "rotationDistance", rotationDistance );
+        dataLog.publish( "speed",            speed );
+        dataLog.publish( "scaledSpeed",      scaledSpeed );
 
         if ( ENFORCE_LIMITS )
         {
@@ -79,12 +87,14 @@ public class RobotArmSlideManipulator extends SubsystemBase
                 {
                     if ( Math.abs( MIN_ROTATION_DISTANCE - Math.abs( rotationDistance ) ) > EPLISON_DIST )
                     {
-                        log.info( "Slide In" );
+                        log.trace( "Slide In" );
+                        dataLog.publish( "slideState", SLIDE_STATE.IN.name() );
                         armSlide.set( scaledSpeed );
                     }
                     else
                     {
-                        log.info( "Limit Slide In" );
+                        log.trace( "Limit Slide In" );
+                        dataLog.publish( "slideState", SLIDE_STATE.IN_LIMIT.name() );
                         armSlide.set( ZERO_SPEED );
                     }
                 }
@@ -92,12 +102,14 @@ public class RobotArmSlideManipulator extends SubsystemBase
                 {
                     if ( Math.abs( MAX_ROTATION_DISTANCE - Math.abs( rotationDistance ) ) > EPLISON_DIST )
                     {
-                        log.info( "Slide Out" );
+                        log.trace( "Slide Out" );
+                        dataLog.publish( "slideState", SLIDE_STATE.OUT.name() );
                         armSlide.set( scaledSpeed );
                     }
                     else
                     {
-                        log.info( "Limit Slide Out" );
+                        log.trace( "Limit Slide Out" );
+                        dataLog.publish( "slideState", SLIDE_STATE.OUT_LIMIT.name() );
                         armSlide.set( ZERO_SPEED );
                     }
                 }
@@ -105,12 +117,14 @@ public class RobotArmSlideManipulator extends SubsystemBase
             }
             else
             {
+                dataLog.publish( "slideState", SLIDE_STATE.NEUTRAL.name() );
                 armSlide.set( ZERO_SPEED );
             }
 
         }
         else
         {
+            dataLog.publish( "slideState", SLIDE_STATE.OPEN.name() );
             armSlide.set( scaledSpeed );
         }
 

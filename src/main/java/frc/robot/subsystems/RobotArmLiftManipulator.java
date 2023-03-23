@@ -13,9 +13,18 @@ import frc.robot.logging.DataNetworkTableLog;
 import frc.robot.logging.Log;
 import frc.robot.logging.LogManager;
 
-public class RobotArmLiftManipulator extends SubsystemBase {
-
+public class RobotArmLiftManipulator extends SubsystemBase
+{
     private static final Log log = LogManager.getLogger( "subsystems.ArmLift" );
+
+    enum LIFT_STATE {
+        OPEN,
+        BACK_LIMIT,
+        BACK,
+        NEUTRAL,
+        FORWARD,
+        FORWARD_LIMIT
+    }
 
     private static final DataNetworkTableLog dataLog =
         new DataNetworkTableLog( 
@@ -25,8 +34,7 @@ public class RobotArmLiftManipulator extends SubsystemBase {
                     "rotationDistance", DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
                     "speed",            DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
                     "scaledSpeed",      DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
-                    "limitDown",        DataNetworkTableLog.COLUMN_TYPE.BYTE,
-                    "limitUp",          DataNetworkTableLog.COLUMN_TYPE.BYTE ) );
+                    "liftState",        DataNetworkTableLog.COLUMN_TYPE.STRING ) );
 
     public static final int     ARM_LIFT_CAN_ID                    = 16;
     public static final double  ARM_LIFT_SCALE_FACTOR              = 0.60;
@@ -63,15 +71,15 @@ public class RobotArmLiftManipulator extends SubsystemBase {
         
         if ( ( cnt % 10 ) == 0 )
         {
-            dataLog.publish( "position",         armLiftEncoder.getPosition() );
-            dataLog.publish( "velocity",         armLiftEncoder.getVelocity() );
-            dataLog.publish( "rotationDistance", rotationDistance );
-            dataLog.publish( "speed",            speed );
-            dataLog.publish( "scaledSpeed",      scaledSpeed );
-
             log.trace( "speed: " + speed + " rotationDistance: " + rotationDistance );
         }
         cnt++;
+
+        dataLog.publish( "position",         armLiftEncoder.getPosition() );
+        dataLog.publish( "velocity",         armLiftEncoder.getVelocity() );
+        dataLog.publish( "rotationDistance", rotationDistance );
+        dataLog.publish( "speed",            speed );
+        dataLog.publish( "scaledSpeed",      scaledSpeed );
 
         if ( ENFORCE_LIMITS )
         {
@@ -84,11 +92,13 @@ public class RobotArmLiftManipulator extends SubsystemBase {
                     if ( Math.abs( MIN_ROTATION_DISTANCE - Math.abs( rotationDistance ) ) > EPLISON_DIST )
                     {
                         log.trace( "Lift Back" );
+                        dataLog.publish( "liftState", LIFT_STATE.BACK.name() );
                         armLift.set( scaledSpeed );
                     }
                     else
                     {
                         log.trace( "Limit Lift Back" );
+                        dataLog.publish( "liftState", LIFT_STATE.BACK_LIMIT.name() );
                         armLift.set( ZERO_SPEED );
                     }
                 }
@@ -97,11 +107,13 @@ public class RobotArmLiftManipulator extends SubsystemBase {
                     if ( Math.abs( MAX_ROTATION_DISTANCE - Math.abs( rotationDistance ) ) > EPLISON_DIST )
                     {
                         log.trace( "Lift Forward" );
+                        dataLog.publish( "liftState", LIFT_STATE.FORWARD.name() );
                         armLift.set( scaledSpeed );
                     }
                     else
                     {
                         log.trace( "Limit Lift Forward" );
+                        dataLog.publish( "liftState", LIFT_STATE.FORWARD_LIMIT.name() );
                         armLift.set( ZERO_SPEED );
                     }
                 }
@@ -109,12 +121,14 @@ public class RobotArmLiftManipulator extends SubsystemBase {
             }
             else
             {
+                dataLog.publish( "liftState", LIFT_STATE.NEUTRAL.name() );
                 armLift.set( ZERO_SPEED );
             }
 
         }
         else
         {
+            dataLog.publish( "liftState", LIFT_STATE.OPEN.name() );
             armLift.set( scaledSpeed );
         }
 
