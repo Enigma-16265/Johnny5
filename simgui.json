@@ -88,6 +88,9 @@
     "Clients": {
       "open": true
     },
+    "Connections": {
+      "open": true
+    },
     "Server": {
       "Publishers": {
         "open": true

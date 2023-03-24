@@ -114,7 +114,14 @@ public class RobotContainer {
         } else if (gamepad.getRawButtonPressed( JOYSTICK_0.X_BUTTON_ID )) {
             robotDrive.setMode( DriveMode.CURVATURE );
         }
-       
+        
+        if (gamepadManipulator.getRawButtonPressed( JOYSTICK_1.Y_BUTTON_ID )) {
+            robotArmLiftManipulator.enforceLimitToggle();
+        }
+
+        if (gamepadManipulator.getRawButtonPressed( JOYSTICK_1.B_BUTTON_ID )) {
+            robotArmLiftManipulator.resetEncoder();
+        }
     }
 
     public void simulationInit()

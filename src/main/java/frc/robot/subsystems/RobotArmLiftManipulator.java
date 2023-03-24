@@ -160,5 +160,4 @@ public class RobotArmLiftManipulator extends SubsystemBase
             enforceLimits = true;
         }
     }
-
 }
