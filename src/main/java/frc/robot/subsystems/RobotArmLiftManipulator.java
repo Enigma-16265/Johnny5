@@ -34,24 +34,28 @@ public class RobotArmLiftManipulator extends SubsystemBase
                     "rotationDistance", DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
                     "speed",            DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
                     "scaledSpeed",      DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
-                    "liftState",        DataNetworkTableLog.COLUMN_TYPE.STRING ) );
+                    "liftState",        DataNetworkTableLog.COLUMN_TYPE.STRING,
+                    "absDist",          DataNetworkTableLog.COLUMN_TYPE.DOUBLE ) );
 
     public static final int     ARM_LIFT_CAN_ID                    = 16;
     public static final double  ARM_LIFT_SCALE_FACTOR              = 0.60;
     public static final double  ENCODER_POSITION_CONVERSION_FACTOR = 0.01;
     public static final double  PULLY_CIRCUMFERENCE                = Math.PI * 4.25; // inches
+    public static final double  MAX_DISTANCE_BACKOFF               = 5.0;
     public static final double  MIN_ROTATION_DISTANCE              = 0.0;
-    public static final double  MAX_ROTATION_DISTANCE              = PULLY_CIRCUMFERENCE * 3;
-    public static final boolean ENFORCE_LIMITS                     = true;
-    
-    public static final double  EPLISON_DIST                       = 0.1;
-    public static final double  EPLISON_SPEED                      = 0.001;
+    public static final double  MAX_ROTATION_DISTANCE              = ( PULLY_CIRCUMFERENCE * 3.127 ) - MAX_DISTANCE_BACKOFF; // Target: 41.752739 Circ: 13.351769
+    public static final boolean ENFORCE_LIMITS_DEFAULT             = true;
+
+    public static final double  EPLISON_DIST                       = 3.0;
+    public static final double  EPLISON_SPEED                      = 0.008;
     public static final double  ZERO_POSITION                      = 0.0;
     public static final double  ZERO_SPEED                         = 0.0;
     public static final double  ZERO_DISTANCE                      = 0.0;
 
     private CANSparkMax     armLift           = new CANSparkMax( ARM_LIFT_CAN_ID, MotorType.kBrushless );
     private RelativeEncoder armLiftEncoder    = armLift.getEncoder();
+
+    boolean enforceLimits = ENFORCE_LIMITS_DEFAULT;
 
     public RobotArmLiftManipulator()
     {
@@ -81,7 +85,7 @@ public class RobotArmLiftManipulator extends SubsystemBase
         dataLog.publish( "speed",            speed );
         dataLog.publish( "scaledSpeed",      scaledSpeed );
 
-        if ( ENFORCE_LIMITS )
+        if ( enforceLimits )
         {
 
             if ( ( Math.abs( speed ) - ZERO_SPEED ) > EPLISON_SPEED )
@@ -89,7 +93,7 @@ public class RobotArmLiftManipulator extends SubsystemBase
 
                 if ( speed < ZERO_SPEED )
                 {
-                    if ( Math.abs( MIN_ROTATION_DISTANCE - Math.abs( rotationDistance ) ) > EPLISON_DIST )
+                    if ( Math.abs( rotationDistance - MIN_ROTATION_DISTANCE ) > EPLISON_DIST )
                     {
                         log.trace( "Lift Back" );
                         dataLog.publish( "liftState", LIFT_STATE.BACK.name() );
@@ -104,7 +108,7 @@ public class RobotArmLiftManipulator extends SubsystemBase
                 }
                 else
                 {
-                    if ( Math.abs( MAX_ROTATION_DISTANCE - Math.abs( rotationDistance ) ) > EPLISON_DIST )
+                    if ( MAX_ROTATION_DISTANCE >= rotationDistance )
                     {
                         log.trace( "Lift Forward" );
                         dataLog.publish( "liftState", LIFT_STATE.FORWARD.name() );
@@ -138,6 +142,23 @@ public class RobotArmLiftManipulator extends SubsystemBase
     {
         log.info( "subsystem sim init" );
         REVPhysicsSim.getInstance().addSparkMax( armLift, DCMotor.getNEO( 1 ) );
+    }
+
+    public void resetEncoder()
+    {
+        armLiftEncoder.setPosition( ZERO_POSITION );
+    }
+
+    public void enforceLimitToggle()
+    {
+        if ( enforceLimits )
+        {
+            enforceLimits = false;
+        }
+        else
+        {
+            enforceLimits = true;
+        }
     }
 
 }
