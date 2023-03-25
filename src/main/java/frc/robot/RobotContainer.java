@@ -17,6 +17,8 @@ import frc.robot.subsystems.RobotIntakeManipulator;
 import frc.robot.subsystems.RobotTurretSpinManipulator;
 import frc.robot.subsystems.RobotDrive.DriveMode;
 
+//Nav x2 mxp
+
 public class RobotContainer {
 
     public static class JOYSTICK_0
