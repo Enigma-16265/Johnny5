@@ -20,8 +20,11 @@ public class RobotDrive extends SubsystemBase{
   private static final DataNetworkTableLog dataLog =
       new DataNetworkTableLog( 
           "subsystems.RobotDrive",
-          Map.of( "leftCount",  DataNetworkTableLog.COLUMN_TYPE.INTEGER,
-                  "rightCount", DataNetworkTableLog.COLUMN_TYPE.INTEGER ) );
+          Map.of( "mode",  DataNetworkTableLog.COLUMN_TYPE.STRING,
+                  "speed", DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
+                  "rotation", DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
+                  "scaledSpeed", DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
+                  "scaledRotation", DataNetworkTableLog.COLUMN_TYPE.DOUBLE ) );
 
     public enum DriveMode {
         ARCADE,
@@ -57,7 +60,8 @@ public class RobotDrive extends SubsystemBase{
 
     private DifferentialDrive diffDrive = new DifferentialDrive( leftMotors, rightMotors );
 
-    private DriveMode mode = DriveConfig.DEFAULT_DRIVE_MODE;
+    private DriveMode          mode     = DriveConfig.DEFAULT_DRIVE_MODE;
+    private RobotDriveListener listener = null;
 
     public RobotDrive() {
         rightMotors.setInverted( true );
@@ -75,47 +79,58 @@ public class RobotDrive extends SubsystemBase{
     }
 
     private int cnt = 1;
-    public void drive( double leftXAxisSpeed,
-                       double leftYAxisSpeed,
-                       double rightXAxisSpeed,
-                       double rightYAxisSpeed )
+    public void drive( double speed,
+                       double rotation )
     {
 
-      if ( ( cnt % 10 ) == 0 )
+        if ( ( cnt % 10 ) == 0 )
         {
-            dataLog.publish( "leftCount",  (long) leftEncoder.get() );
-            dataLog.publish( "rightCOunt", (long) rightEncoder.get() );
+            log.trace( "speed: " + speed + " rotation: " + rotation );
         }
         cnt++;
+
+        dataLog.publish( "mode", mode.name() );
+        dataLog.publish( "speed", speed );
+        dataLog.publish( "rotation", rotation );
 
         switch( mode )
         {
           case ARCADE:
           default:{
 
-            double scaledYSpeed = leftYAxisSpeed * DriveConfig.ARCADE_X_SCALE_FACTOR;
-            double scaledXSpeed = rightXAxisSpeed * DriveConfig.ARCADE_Y_SCALE_FACTOR;
+            double scaledSpeed    = speed * DriveConfig.ARCADE_SPEED_SCALE_FACTOR;
+            double scaledRotation = rotation * DriveConfig.ARCADE_ROTATION_SCALE_FACTOR;
 
-            diffDrive.arcadeDrive( -scaledYSpeed, scaledXSpeed );
+            dataLog.publish( "scaledSpeed", scaledSpeed );
+            dataLog.publish( "scaledRotation", scaledRotation );
+
+            diffDrive.arcadeDrive( scaledSpeed, scaledRotation );
           }
           break;
     
           case TANK: {
 
-            double scaledYSpeed = leftYAxisSpeed * DriveConfig.TANK_SCALE_FACTOR;
-            double scaledXSpeed = rightYAxisSpeed * DriveConfig.TANK_SCALE_FACTOR;
+            // Speed corresponds to left track, Rotation corresponds to right track
+            double scaledSpeed    = speed * DriveConfig.TANK_SPEED_SCALE_FACTOR;
+            double scaledRotation = rotation * DriveConfig.TANK_SPEED_SCALE_FACTOR;
 
-            diffDrive.tankDrive( -scaledYSpeed, -scaledXSpeed );
+            dataLog.publish( "scaledSpeed", scaledSpeed );
+            dataLog.publish( "scaledRotation", scaledRotation );
+
+            diffDrive.tankDrive( scaledSpeed, scaledRotation );
           }
           break;
     
           case CURVATURE:
           {
 
-            double scaledYSpeed = leftYAxisSpeed * DriveConfig.CURVATURE_X_SCALE_FACTOR;
-            double scaledXSpeed = rightXAxisSpeed * DriveConfig.CURVATURE_Y_SCALE_FACTOR;
+            double scaledSpeed    = speed * DriveConfig.CURVATURE_SPEED_SCALE_FACTOR;
+            double scaledRotation = rotation * DriveConfig.CURVATURE_ROTATION_SCALE_FACTOR;
 
-            diffDrive.curvatureDrive( -scaledYSpeed, -scaledXSpeed, true );
+            dataLog.publish( "scaledSpeed", scaledSpeed );
+            dataLog.publish( "scaledRotation", scaledRotation );
+
+            diffDrive.curvatureDrive( scaledSpeed, scaledRotation, DriveConfig.CURVATURE_TURN_IN_PLACE );
           }
           break;
         }
@@ -132,11 +147,22 @@ public class RobotDrive extends SubsystemBase{
         {
             this.mode = mode;
             log.info( "Set Drive Mode: " + mode );
+
+            if ( listener != null )
+            {
+                listener.driveModeUpdate( this.mode );
+            }
         }
     }
 
     public void setDefaultMode()
     {
-      this.mode = DriveConfig.DEFAULT_DRIVE_MODE;
+        mode = DriveConfig.DEFAULT_DRIVE_MODE;
     }
+
+    public void setListener( RobotDriveListener listener )
+    {
+        this.listener = listener;
+    }
+
 }

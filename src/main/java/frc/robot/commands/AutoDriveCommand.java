@@ -64,23 +64,17 @@ public class AutoDriveCommand extends CommandBase {
         // Drive speed inputs are set to mimic joystick assigned inputs in subsystem.RobotDrive TANK mode
         if ( timer.get() < DRIVE_FORWARD_COMPLETE_MARK_SECS )
         {
-            robotDrive.drive( 0.0,
-                              DRIVE_FORWARD_SPEED,
-                              0.0,
+            robotDrive.drive( DRIVE_FORWARD_SPEED,
                               DRIVE_FORWARD_SPEED );
         } else
         if ( timer.get() < TRANSITION_COMPLETE_MARK_SECS )
         {
-            robotDrive.drive( 0.0,
-                              TRANSITION_SPEED,
-                              0.0,
+            robotDrive.drive( TRANSITION_SPEED,
                               TRANSITION_SPEED );
         } else
         if ( timer.get() < DRIVE_BACKWARD_COMPLETE_MARK_SECS )
         {
-            robotDrive.drive( 0.0,
-                              DRIVE_BACKWARD_SPEED,
-                              0.0,
+            robotDrive.drive( DRIVE_BACKWARD_SPEED,
                               DRIVE_BACKWARD_SPEED );
         }
     }

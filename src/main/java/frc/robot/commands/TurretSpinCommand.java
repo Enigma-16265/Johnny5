@@ -36,7 +36,7 @@ public class TurretSpinCommand extends CommandBase
         
         speed = ( Math.abs( speed ) > RobotConfig.JOYSTICK_DEAD_BAND ) ? speed : RobotConfig.ZERO_SPEED;
 
-        if ( TurretSpinCommandConfig.SPEED_ACCEL_LIMIT_UNITS_PER_SEC != 0.0 )
+        if ( TurretSpinCommandConfig.SPEED_ACCEL_LIMIT_UNITS_PER_SEC != RobotConfig.ZERO_RATE_LIMIT )
         {
             speed = limiter.calculate( speed );
         }

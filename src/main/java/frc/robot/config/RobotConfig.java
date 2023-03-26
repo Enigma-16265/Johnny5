@@ -8,6 +8,8 @@ public class RobotConfig
     public static double ZERO_SPEED         = 0.0;
     public static double ZERO_POSITION      = 0.0;
     public static double EPLISON_DIST       = 3.0;
+    public static double ZERO_RATE_LIMIT    = 0.0;
+    public static double ZERO_SLEW_RATE     = 0.0;
 
     public static class DriverInputMapping
     {
@@ -41,20 +43,40 @@ public class RobotConfig
 
     public static class DriveConfig
     {
-        public static DriveMode DEFAULT_DRIVE_MODE       = DriveMode.CURVATURE;
-        public static double    ARCADE_X_SCALE_FACTOR    = 0.75;
-        public static double    ARCADE_Y_SCALE_FACTOR    = 0.90;
-        public static double    TANK_SCALE_FACTOR        = 0.90;
-        public static double    CURVATURE_X_SCALE_FACTOR = 0.75;
-        public static double    CURVATURE_Y_SCALE_FACTOR = 0.75;
+        public static DriveMode DEFAULT_DRIVE_MODE              = DriveMode.CURVATURE;
+        public static double    ARCADE_SPEED_SCALE_FACTOR       = 0.75;
+        public static double    ARCADE_ROTATION_SCALE_FACTOR    = 0.90;
+        public static double    TANK_SPEED_SCALE_FACTOR         = 0.90;
+        public static double    CURVATURE_SPEED_SCALE_FACTOR    = 0.75;
+        public static double    CURVATURE_ROTATION_SCALE_FACTOR = 0.75;
+        public static boolean   CURVATURE_TURN_IN_PLACE         = true;
     }
     public static class DriveCommandConfig
     {
-        public static double ARCADE_X_SPEED_ACCEL_LIMIT_UNITS_PER_SEC    = 3.0;
-        public static double ARCADE_Y_SPEED_ACCEL_LIMIT_UNITS_PER_SEC    = 3.0;
-        public static double TANK_SPEED_ACCEL_LIMIT_UNITS_PER_SEC        = 3.0;
-        public static double CURVATURE_X_SPEED_ACCEL_LIMIT_UNITS_PER_SEC = 3.0;
-        public static double CURVATURE_Y_SPEED_ACCEL_LIMIT_UNITS_PER_SEC = 3.0;
+        public static final byte ARCADE_ORIENTATION_CLEAR                   = 0x00;
+        public static final byte ARCADE_ORIENTATION_INVERT_ROTATION_MASK    = 0x01;
+        public static final byte ARCADE_ORIENTATION_INVERT_SPEED_MASK       = 0x02;
+
+        public static final byte TANK_ORIENTATION_CLEAR                     = 0x00;
+        public static final byte TANK_ORIENTATION_INVERT_RIGHT_SPEED_MASK   = 0x01;
+        public static final byte TANK_ORIENTATION_INVERT_LEFT_SPEED_MASK    = 0x02;
+
+        public static final byte CURVATURE_ORIENTATION_CLEAR                = 0x00;
+        public static final byte CURVATURE_ORIENTATION_INVERT_ROTATION_MASK = 0x01;
+        public static final byte CURVATURE_ORIENTATION_INVERT_SPEED_MASK    = 0x02;
+
+        public static double  ARCADE_SPEED_ACCEL_LIMIT_UNITS_PER_SEC             = 3.0;
+        public static double  ARCADE_ROTATION_SPEED_ACCEL_LIMIT_UNITS_PER_SEC    = 3.0;
+        public static byte    ARCADE_ORIENTATION                                 = ARCADE_ORIENTATION_INVERT_SPEED_MASK;
+
+        public static double  TANK_SPEED_ACCEL_LIMIT_UNITS_PER_SEC               = 3.0;
+        public static byte    TANK_ORIENTATION                                   = TANK_ORIENTATION_INVERT_LEFT_SPEED_MASK |
+                                                                                   TANK_ORIENTATION_INVERT_RIGHT_SPEED_MASK ;
+
+        public static double  CURVATURE_SPEED_ACCEL_LIMIT_UNITS_PER_SEC          = 3.0;
+        public static double  CURVATURE_ROTATION_SPEED_ACCEL_LIMIT_UNITS_PER_SEC = 3.0;
+        public static byte    CURVATURE_ORIENTATION                              = CURVATURE_ORIENTATION_INVERT_SPEED_MASK |
+                                                                                   CURVATURE_ORIENTATION_INVERT_ROTATION_MASK;
     }
 
     public static class ArmLiftConfig
