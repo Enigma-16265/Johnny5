@@ -121,11 +121,13 @@ public class RobotContainer {
         if (gamepadManipulator.getRawButtonPressed( JOYSTICK_1.Y_BUTTON_ID )) {
             robotArmLiftManipulator.enforceLimitToggle();
             robotArmSlideManipulator.enforceLimitToggle();
+            robotTurretSpinManipulator.enforceLimitToggle();
         }
 
         if (gamepadManipulator.getRawButtonPressed( JOYSTICK_1.B_BUTTON_ID )) {
             robotArmLiftManipulator.resetEncoder();
             robotArmSlideManipulator.resetEncoder();
+            robotTurretSpinManipulator.resetEncoder();
         }
     }
 

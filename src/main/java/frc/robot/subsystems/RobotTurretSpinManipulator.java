@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.config.RobotConfig;
 import frc.robot.logging.DataNetworkTableLog;
 import frc.robot.logging.Log;
 import frc.robot.logging.LogManager;
@@ -42,20 +43,16 @@ public class RobotTurretSpinManipulator extends SubsystemBase
     public static final double  PULLY_CIRCUMFERENCE                = Math.PI * 1.0; // inches
     public static final double  MIN_ROTATION_DISTANCE              = -1.0;
     public static final double  MAX_ROTATION_DISTANCE              = 1.0;
-    public static final boolean ENFORCE_LIMITS                     = false;
-
-    public static final double  EPLISON_DIST                       = 0.1;
-    public static final double  EPLISON_SPEED                      = 0.001;
-    public static final double  ZERO_POSITION                      = 0.0;
-    public static final double  ZERO_SPEED                         = 0.0;
-    public static final double  ZERO_DISTANCE                      = 0.0;
+    public static final boolean ENFORCE_LIMITS_DEFAULT             = true;
 
     private CANSparkMax     turretSpin        = new CANSparkMax( TURRET_SPIN_CAN_ID, MotorType.kBrushless );
     private RelativeEncoder turretSpinEncoder = turretSpin.getEncoder();
 
+    private boolean         enforceLimits     = ENFORCE_LIMITS_DEFAULT;
+
     public RobotTurretSpinManipulator()
     {
-        turretSpinEncoder.setPosition( ZERO_POSITION );
+        turretSpinEncoder.setPosition( RobotConfig.ZERO_POSITION );
         turretSpinEncoder.setPositionConversionFactor( ENCODER_POSITION_CONVERSION_FACTOR );
     }
     
@@ -77,51 +74,44 @@ public class RobotTurretSpinManipulator extends SubsystemBase
         dataLog.publish( "speed",            speed );
         dataLog.publish( "scaledSpeed",      scaledSpeed );
 
-        if ( ENFORCE_LIMITS )
+        if ( enforceLimits )
         {
 
-            if ( ( Math.abs( speed ) - ZERO_SPEED ) > EPLISON_SPEED )
+            if ( speed < RobotConfig.ZERO_SPEED )
             {
-
-                if ( speed < ZERO_SPEED )
+                if ( MIN_ROTATION_DISTANCE <= rotationDistance )
                 {
-                    //rotationDistance = MIN_ROTATION_DISTANCE;
-                    log.info( "rotationDistance: " + rotationDistance );
-                    if ( Math.abs( MIN_ROTATION_DISTANCE - Math.abs( rotationDistance ) ) > EPLISON_DIST )
-                    {
-                        log.trace( "Spin Left" );
-                        dataLog.publish( "spinState", SPIN_STATE.LEFT.name() );
-                        turretSpin.set( scaledSpeed );
-                    }
-                    else
-                    {
-                        log.trace( "Limit Spin Left" );
-                        dataLog.publish( "spinState", SPIN_STATE.LEFT_LIMIT.name() );
-                        turretSpin.set( ZERO_SPEED );
-                    }
+                    log.trace( "Spin Left" );
+                    dataLog.publish( "spinState", SPIN_STATE.LEFT.name() );
+                    turretSpin.set( scaledSpeed );
                 }
                 else
                 {
-                    //rotationDistance = MAX_ROTATION_DISTANCE - EPLISON_DIST;
-                    if ( Math.abs( MAX_ROTATION_DISTANCE - Math.abs( rotationDistance ) ) > EPLISON_DIST )
-                    {
-                        log.trace( "Spin Right" );
-                        dataLog.publish( "spinState", SPIN_STATE.RIGHT.name() );
-                        turretSpin.set( scaledSpeed );
-                    }
-                    else
-                    {
-                        log.trace( "Limit Spin Right" );
-                        dataLog.publish( "spinState", SPIN_STATE.RIGHT_LIMIT.name() );
-                        turretSpin.set( ZERO_SPEED );
-                    }
+                    log.trace( "Limit Spin Left" );
+                    dataLog.publish( "spinState", SPIN_STATE.LEFT_LIMIT.name() );
+                    turretSpin.set( RobotConfig.ZERO_SPEED );
                 }
-
+            }
+            else
+            if ( speed > RobotConfig.ZERO_SPEED )
+            {
+                if ( MAX_ROTATION_DISTANCE >= rotationDistance )
+                {
+                    log.trace( "Spin Right" );
+                    dataLog.publish( "spinState", SPIN_STATE.RIGHT.name() );
+                    turretSpin.set( scaledSpeed );
+                }
+                else
+                {
+                    log.trace( "Limit Spin Right" );
+                    dataLog.publish( "spinState", SPIN_STATE.RIGHT_LIMIT.name() );
+                    turretSpin.set( RobotConfig.ZERO_SPEED );
+                }
             }
             else
             {
                 dataLog.publish( "spinState", SPIN_STATE.NEUTRAL.name() );
-                turretSpin.set( ZERO_SPEED );
+                turretSpin.set( RobotConfig.ZERO_SPEED );
             }
 
         }
@@ -137,6 +127,23 @@ public class RobotTurretSpinManipulator extends SubsystemBase
     {
         log.info( "subsystem sim init" );
         REVPhysicsSim.getInstance().addSparkMax( turretSpin, DCMotor.getNEO( 1 ) );
+    }
+
+    public void resetEncoder()
+    {
+        turretSpinEncoder.setPosition( RobotConfig.ZERO_POSITION );
+    }
+
+    public void enforceLimitToggle()
+    {
+        if ( enforceLimits )
+        {
+            enforceLimits = false;
+        }
+        else
+        {
+            enforceLimits = true;
+        }
     }
 
 }
