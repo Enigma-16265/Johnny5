@@ -16,6 +16,7 @@ public class TurretSpinCommand extends CommandBase{
     {
         this.manipulator   = manipulator;
         this.speedSupplier = speedSupplier;
+        
         addRequirements( manipulator );
     }
 

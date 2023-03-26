@@ -27,8 +27,10 @@ public class AutoDriveCommand extends CommandBase {
 
     int cnt = 0;
 
-    public AutoDriveCommand(RobotDrive robotDrive) {
+    public AutoDriveCommand( RobotDrive robotDrive )
+    {
         this.robotDrive = robotDrive;
+        
         addRequirements(robotDrive);
     }
 

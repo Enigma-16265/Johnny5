@@ -15,6 +15,7 @@ public class IntakeCommand extends CommandBase{
     {
         this.manipulator   = manipulator;
         this.speedSupplier = speedSupplier;
+        
         addRequirements( manipulator );
     }
 
