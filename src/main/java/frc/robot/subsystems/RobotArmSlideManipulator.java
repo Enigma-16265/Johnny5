@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.config.RobotConfig;
 import frc.robot.logging.DataNetworkTableLog;
 import frc.robot.logging.Log;
 import frc.robot.logging.LogManager;
@@ -41,21 +42,18 @@ public class RobotArmSlideManipulator extends SubsystemBase
     public static final double  ENCODER_POSITION_CONVERSION_FACTOR = 0.0625;
     public static final double  PULLY_CIRCUMFERENCE                = Math.PI * 1.5; //inches
     public static final double  MIN_ROTATION_DISTANCE              = 0.0;
-    public static final double  MAX_ROTATION_DISTANCE              = PULLY_CIRCUMFERENCE * 6;
-    public static final boolean ENFORCE_LIMITS                     = true;
-    
-    public static final double  EPLISON_DIST                       = 0.1;
-    public static final double  EPLISON_SPEED                      = 0.001;
-    public static final double  ZERO_POSITION                      = 0.0;
-    public static final double  ZERO_SPEED                         = 0.0;
-    public static final double  ZERO_DISTANCE                      = 0.0;
+    public static final double  MAX_DISTANCE_BACKOFF               = 5.0;
+    public static final double  MAX_ROTATION_DISTANCE              = ( PULLY_CIRCUMFERENCE * 6 ) - MAX_DISTANCE_BACKOFF;
+    public static final boolean ENFORCE_LIMITS_DEFAULT             = true;
 
-    private CANSparkMax     armSlide          = new CANSparkMax( ARM_SLIDE_CAN_ID, MotorType.kBrushless );
-    private RelativeEncoder armSlideEncoder   = armSlide.getEncoder();
+    private CANSparkMax     armSlide        = new CANSparkMax( ARM_SLIDE_CAN_ID, MotorType.kBrushless );
+    private RelativeEncoder armSlideEncoder = armSlide.getEncoder();
  
+    private boolean         enforceLimits   = ENFORCE_LIMITS_DEFAULT;
+
     public RobotArmSlideManipulator()
     {
-        armSlideEncoder.setPosition( ZERO_POSITION );
+        armSlideEncoder.setPosition( RobotConfig.ZERO_POSITION );
         armSlideEncoder.setPositionConversionFactor( ENCODER_POSITION_CONVERSION_FACTOR );
     }
 
@@ -77,48 +75,43 @@ public class RobotArmSlideManipulator extends SubsystemBase
         dataLog.publish( "speed",            speed );
         dataLog.publish( "scaledSpeed",      scaledSpeed );
 
-        if ( ENFORCE_LIMITS )
+        if ( enforceLimits )
         {
 
-            if ( ( Math.abs( speed ) - ZERO_SPEED ) > EPLISON_SPEED )
+            if ( speed < RobotConfig.ZERO_SPEED )
             {
-
-                if ( speed < ZERO_SPEED )
+                if ( Math.abs( rotationDistance - MIN_ROTATION_DISTANCE ) > RobotConfig.EPLISON_DIST )
                 {
-                    if ( Math.abs( MIN_ROTATION_DISTANCE - Math.abs( rotationDistance ) ) > EPLISON_DIST )
-                    {
-                        log.trace( "Slide In" );
-                        dataLog.publish( "slideState", SLIDE_STATE.IN.name() );
-                        armSlide.set( scaledSpeed );
-                    }
-                    else
-                    {
-                        log.trace( "Limit Slide In" );
-                        dataLog.publish( "slideState", SLIDE_STATE.IN_LIMIT.name() );
-                        armSlide.set( ZERO_SPEED );
-                    }
+                    log.trace( "Slide In" );
+                    dataLog.publish( "slideState", SLIDE_STATE.IN.name() );
+                    armSlide.set( scaledSpeed );
                 }
                 else
                 {
-                    if ( Math.abs( MAX_ROTATION_DISTANCE - Math.abs( rotationDistance ) ) > EPLISON_DIST )
-                    {
-                        log.trace( "Slide Out" );
-                        dataLog.publish( "slideState", SLIDE_STATE.OUT.name() );
-                        armSlide.set( scaledSpeed );
-                    }
-                    else
-                    {
-                        log.trace( "Limit Slide Out" );
-                        dataLog.publish( "slideState", SLIDE_STATE.OUT_LIMIT.name() );
-                        armSlide.set( ZERO_SPEED );
-                    }
+                    log.trace( "Limit Slide In" );
+                    dataLog.publish( "slideState", SLIDE_STATE.IN_LIMIT.name() );
+                    armSlide.set( RobotConfig.ZERO_SPEED );
                 }
-
+            } else
+            if ( speed > RobotConfig.ZERO_SPEED )
+            {
+                if ( MAX_ROTATION_DISTANCE >= rotationDistance )
+                {
+                    log.trace( "Slide Out" );
+                    dataLog.publish( "slideState", SLIDE_STATE.OUT.name() );
+                    armSlide.set( scaledSpeed );
+                }
+                else
+                {
+                    log.trace( "Limit Slide Out" );
+                    dataLog.publish( "slideState", SLIDE_STATE.OUT_LIMIT.name() );
+                    armSlide.set( RobotConfig.ZERO_SPEED );
+                }
             }
             else
             {
                 dataLog.publish( "slideState", SLIDE_STATE.NEUTRAL.name() );
-                armSlide.set( ZERO_SPEED );
+                armSlide.set( RobotConfig.ZERO_SPEED );
             }
 
         }
@@ -134,6 +127,23 @@ public class RobotArmSlideManipulator extends SubsystemBase
     {
         log.info( "subsystem sim init" );
         REVPhysicsSim.getInstance().addSparkMax( armSlide, DCMotor.getNEO( 1 ) );
+    }
+
+    public void resetEncoder()
+    {
+        armSlideEncoder.setPosition( RobotConfig.ZERO_POSITION );
+    }
+
+    public void enforceLimitToggle()
+    {
+        if ( enforceLimits )
+        {
+            enforceLimits = false;
+        }
+        else
+        {
+            enforceLimits = true;
+        }
     }
 
 }
