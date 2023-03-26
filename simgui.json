@@ -74,9 +74,6 @@
         "open": true
       },
       "subsystems": {
-        "ArmLift": {
-          "open": true
-        },
         "TurretSpin": {
           "open": true
         },
