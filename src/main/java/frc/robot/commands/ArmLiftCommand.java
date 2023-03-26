@@ -34,7 +34,11 @@ public class ArmLiftCommand extends CommandBase{
         double speed = speedSupplier.get();
 
         speed = ( Math.abs( speed ) > RobotConfig.JOYSTICK_DEAD_BAND ) ? speed : RobotConfig.ZERO_SPEED;
-        speed = limiter.calculate( speed );
+
+        if ( ArmLiftCommandConfig.SPEED_ACCEL_LIMIT_UNITS_PER_SEC != 0.0 )
+        {
+            speed = limiter.calculate( speed );
+        }
 
         manipulator.lift( speed );
     }
