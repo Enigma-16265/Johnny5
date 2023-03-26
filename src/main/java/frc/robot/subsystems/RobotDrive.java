@@ -15,7 +15,7 @@ import frc.robot.logging.LogManager;
 
 public class RobotDrive extends SubsystemBase{
  
-  private static final Log log = LogManager.getLogger( LogManager.Type.NETWORK_TABLES, "subsystems.RobotDrive" );
+  private static final Log log = LogManager.getLogger( "subsystems.RobotDrive" );
 
   private static final DataNetworkTableLog dataLog =
       new DataNetworkTableLog( 
