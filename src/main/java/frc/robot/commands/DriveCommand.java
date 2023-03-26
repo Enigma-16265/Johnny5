@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.config.RobotConfig;
 import frc.robot.subsystems.RobotDrive;
@@ -12,6 +13,13 @@ public class DriveCommand extends CommandBase{
     private final Supplier<Double> leftYAxisSpeedSupplier;
     private final Supplier<Double> rightXAxisSpeedSupplier;
     private final Supplier<Double> rightYAxisSpeedSupplier;
+
+    // private final SlewRateLimiter arcadeXLimiter;
+    // private final SlewRateLimiter arcadeYLimiter;
+    // private final SlewRateLimiter tankLeftLimiter;
+    // private final SlewRateLimiter tankRightLimiter;
+    // private final SlewRateLimiter curvatureXLimiter;
+    // private final SlewRateLimiter curvatureYLimiter;
 
     public DriveCommand(
         RobotDrive       robotDrive,

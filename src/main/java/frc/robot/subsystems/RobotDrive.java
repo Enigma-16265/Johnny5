@@ -121,6 +121,11 @@ public class RobotDrive extends SubsystemBase{
         }
     }
 
+    public DriveMode getMode()
+    {
+        return mode;
+    }
+
     public void setMode( DriveMode mode )
     {
         if ( this.mode != mode )

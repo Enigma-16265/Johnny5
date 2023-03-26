@@ -48,6 +48,14 @@ public class RobotConfig
         public static double    CURVATURE_X_SCALE_FACTOR = 0.75;
         public static double    CURVATURE_Y_SCALE_FACTOR = 0.75;
     }
+    public static class DriveCommandConfig
+    {
+        public static double ARCADE_X_SPEED_ACCEL_LIMIT_UNITS_PER_SEC    = 0.1;
+        public static double ARCADE_Y_SPEED_ACCEL_LIMIT_UNITS_PER_SEC    = 0.1;
+        public static double TANK_SPEED_ACCEL_LIMIT_UNITS_PER_SEC        = 0.1;
+        public static double CURVATURE_X_SPEED_ACCEL_LIMIT_UNITS_PER_SEC = 0.1;
+        public static double CURVATURE_Y_SPEED_ACCEL_LIMIT_UNITS_PER_SEC = 0.1;
+    }
 
     public static class ArmLiftConfig
     {
@@ -58,6 +66,11 @@ public class RobotConfig
         public static double  MAX_DISTANCE_BACKOFF               = 5.0;
         public static double  MAX_ROTATION_DISTANCE              = ( PULLY_CIRCUMFERENCE * 3.127 ) - MAX_DISTANCE_BACKOFF; // Target: 41.752739 Circ: 13.351769
         public static boolean ENFORCE_LIMITS_DEFAULT             = true;
+    }
+
+    public static class ArmLiftCommandConfig
+    {
+        public static double  SPEED_ACCEL_LIMIT_UNITS_PER_SEC = 0.1;
     }
 
     public static class ArmSlideConfig
@@ -71,6 +84,11 @@ public class RobotConfig
         public static boolean ENFORCE_LIMITS_DEFAULT             = true;
     }
 
+    public static class ArmSlideCommandConfig
+    {
+        public static double  SPEED_ACCEL_LIMIT_UNITS_PER_SEC = 0.1;
+    }
+
     public static class TurretConfig
     {
         public static double  TURRET_SPIN_SCALE_FACTOR           = 0.20;
@@ -79,6 +97,11 @@ public class RobotConfig
         public static double  MIN_ROTATION_DISTANCE              = -1.0;
         public static double  MAX_ROTATION_DISTANCE              = 1.0;
         public static boolean ENFORCE_LIMITS_DEFAULT             = true;
+    }
+
+    public static class TurretSpinCommandConfig
+    {
+        public static double  SPEED_ACCEL_LIMIT_UNITS_PER_SEC = 0.1;
     }
     
 }
