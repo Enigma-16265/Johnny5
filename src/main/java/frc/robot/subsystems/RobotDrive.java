@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.config.RobotConfig.DriveConfig;
 import frc.robot.logging.DataNetworkTableLog;
 import frc.robot.logging.Log;
 import frc.robot.logging.LogManager;
@@ -28,8 +29,6 @@ public class RobotDrive extends SubsystemBase{
         CURVATURE
     };
 
-    public static final DriveMode DEFAULT_DRIVE_MODE  = DriveMode.CURVATURE;
-    
     public static final int LEFT_MOTOR_FRONT_CAN_ID   = 11;
     public static final int LEFT_MOTOR_REAR_CAN_ID    = 12;
     public static final int LEFT_ENCODER_CHANNEL_A    = 4;
@@ -42,12 +41,6 @@ public class RobotDrive extends SubsystemBase{
 
     private static final double COUNTS_PER_REV        = 1440.0;
     private static final double WHEEL_DIAMATER_IN     = 6.5;
-
-    public static final double  ARCADE_X_SCALE_FACTOR    = 0.75;
-    public static final double  ARCADE_Y_SCALE_FACTOR    = 0.90;
-    public static final double  TANK_SCALE_FACTOR        = 0.90;
-    public static final double  CURVATURE_X_SCALE_FACTOR = 0.75;
-    public static final double  CURVATURE_Y_SCALE_FACTOR = 0.75;
 
     private MotorControllerGroup leftMotors = 
         new MotorControllerGroup( new WPI_VictorSPX( LEFT_MOTOR_FRONT_CAN_ID ),
@@ -64,7 +57,7 @@ public class RobotDrive extends SubsystemBase{
 
     private DifferentialDrive diffDrive = new DifferentialDrive( leftMotors, rightMotors );
 
-    private DriveMode mode = DEFAULT_DRIVE_MODE;
+    private DriveMode mode = DriveConfig.DEFAULT_DRIVE_MODE;
 
     public RobotDrive() {
         rightMotors.setInverted( true );
@@ -100,8 +93,8 @@ public class RobotDrive extends SubsystemBase{
           case ARCADE:
           default:{
 
-            double scaledYSpeed = leftYAxisSpeed * ARCADE_X_SCALE_FACTOR;
-            double scaledXSpeed = rightXAxisSpeed * ARCADE_Y_SCALE_FACTOR;
+            double scaledYSpeed = leftYAxisSpeed * DriveConfig.ARCADE_X_SCALE_FACTOR;
+            double scaledXSpeed = rightXAxisSpeed * DriveConfig.ARCADE_Y_SCALE_FACTOR;
 
             diffDrive.arcadeDrive( -scaledYSpeed, scaledXSpeed );
           }
@@ -109,8 +102,8 @@ public class RobotDrive extends SubsystemBase{
     
           case TANK: {
 
-            double scaledYSpeed = leftYAxisSpeed * TANK_SCALE_FACTOR;
-            double scaledXSpeed = rightYAxisSpeed * TANK_SCALE_FACTOR;
+            double scaledYSpeed = leftYAxisSpeed * DriveConfig.TANK_SCALE_FACTOR;
+            double scaledXSpeed = rightYAxisSpeed * DriveConfig.TANK_SCALE_FACTOR;
 
             diffDrive.tankDrive( -scaledYSpeed, -scaledXSpeed );
           }
@@ -119,8 +112,8 @@ public class RobotDrive extends SubsystemBase{
           case CURVATURE:
           {
 
-            double scaledYSpeed = leftYAxisSpeed * CURVATURE_X_SCALE_FACTOR;
-            double scaledXSpeed = rightXAxisSpeed * CURVATURE_Y_SCALE_FACTOR;
+            double scaledYSpeed = leftYAxisSpeed * DriveConfig.CURVATURE_X_SCALE_FACTOR;
+            double scaledXSpeed = rightXAxisSpeed * DriveConfig.CURVATURE_Y_SCALE_FACTOR;
 
             diffDrive.curvatureDrive( -scaledYSpeed, -scaledXSpeed, true );
           }
@@ -139,6 +132,6 @@ public class RobotDrive extends SubsystemBase{
 
     public void setDefaultMode()
     {
-      this.mode = DEFAULT_DRIVE_MODE;
+      this.mode = DriveConfig.DEFAULT_DRIVE_MODE;
     }
 }

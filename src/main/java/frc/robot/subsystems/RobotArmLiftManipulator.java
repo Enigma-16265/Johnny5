@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.config.RobotConfig;
+import frc.robot.config.RobotConfig.ArmLiftConfig;
 import frc.robot.logging.DataNetworkTableLog;
 import frc.robot.logging.Log;
 import frc.robot.logging.LogManager;
@@ -38,21 +39,14 @@ public class RobotArmLiftManipulator extends SubsystemBase
                     "liftState",        DataNetworkTableLog.COLUMN_TYPE.STRING,
                     "absDist",          DataNetworkTableLog.COLUMN_TYPE.DOUBLE ) );
 
+    public static int CAN_ID = 16;
+
     //Limit switch on DIO 0 (magnetic, WCP, 971)
 
-    public static final int     ARM_LIFT_CAN_ID                    = 16;
-    public static final double  ARM_LIFT_SCALE_FACTOR              = 1.00;
-    public static final double  ENCODER_POSITION_CONVERSION_FACTOR = 0.01;
-    public static final double  PULLY_CIRCUMFERENCE                = Math.PI * 4.25; // inches
-    public static final double  MIN_ROTATION_DISTANCE              = 0.0;
-    public static final double  MAX_DISTANCE_BACKOFF               = 5.0;
-    public static final double  MAX_ROTATION_DISTANCE              = ( PULLY_CIRCUMFERENCE * 3.127 ) - MAX_DISTANCE_BACKOFF; // Target: 41.752739 Circ: 13.351769
-    public static final boolean ENFORCE_LIMITS_DEFAULT             = true;
-
-    private CANSparkMax     armLift        = new CANSparkMax( ARM_LIFT_CAN_ID, MotorType.kBrushless );
+    private CANSparkMax     armLift        = new CANSparkMax( CAN_ID, MotorType.kBrushless );
     private RelativeEncoder armLiftEncoder = armLift.getEncoder();
 
-    private boolean         enforceLimits  = ENFORCE_LIMITS_DEFAULT;
+    private boolean         enforceLimits  = ArmLiftConfig.ENFORCE_LIMITS_DEFAULT;
 
     public RobotArmLiftManipulator()
     {
@@ -61,14 +55,14 @@ public class RobotArmLiftManipulator extends SubsystemBase
         armLift.setInverted( true );
 
         armLiftEncoder.setPosition( RobotConfig.ZERO_POSITION );
-        armLiftEncoder.setPositionConversionFactor( ENCODER_POSITION_CONVERSION_FACTOR );
+        armLiftEncoder.setPositionConversionFactor( ArmLiftConfig.ENCODER_POSITION_CONVERSION_FACTOR );
     }
 
     private int cnt = 1;
     public void lift( double speed )
     {
-        double rotationDistance = armLiftEncoder.getPosition() * PULLY_CIRCUMFERENCE;
-        double scaledSpeed      = speed * ARM_LIFT_SCALE_FACTOR;
+        double rotationDistance = armLiftEncoder.getPosition() * ArmLiftConfig.PULLY_CIRCUMFERENCE;
+        double scaledSpeed      = speed * ArmLiftConfig.SPEED_SCALE_FACTOR;
         
         if ( ( cnt % 10 ) == 0 )
         {
@@ -87,7 +81,7 @@ public class RobotArmLiftManipulator extends SubsystemBase
 
             if ( speed < RobotConfig.ZERO_SPEED )
             {
-                if ( Math.abs( rotationDistance - MIN_ROTATION_DISTANCE ) > RobotConfig.EPLISON_DIST )
+                if ( Math.abs( rotationDistance - ArmLiftConfig.MIN_ROTATION_DISTANCE ) > RobotConfig.EPLISON_DIST )
                 {
                     log.trace( "Lift Back" );
                     dataLog.publish( "liftState", LIFT_STATE.BACK.name() );
@@ -102,7 +96,7 @@ public class RobotArmLiftManipulator extends SubsystemBase
             } else
             if ( speed > RobotConfig.ZERO_SPEED )
             {
-                if ( MAX_ROTATION_DISTANCE >= rotationDistance )
+                if ( ArmLiftConfig.MAX_ROTATION_DISTANCE >= rotationDistance )
                 {
                     log.trace( "Lift Forward" );
                     dataLog.publish( "liftState", LIFT_STATE.FORWARD.name() );

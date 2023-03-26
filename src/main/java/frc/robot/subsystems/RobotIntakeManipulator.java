@@ -22,9 +22,9 @@ public class RobotIntakeManipulator extends SubsystemBase
         "subsystems.Intake",
         Map.of( "speed", DataNetworkTableLog.COLUMN_TYPE.DOUBLE ) );
 
-    public static final int INTAKE_CAN_ID = 18;
+    public static final int CAN_ID = 18;
 
-    private CANSparkMax armIntake = new CANSparkMax( INTAKE_CAN_ID, MotorType.kBrushed );
+    private CANSparkMax armIntake = new CANSparkMax( CAN_ID, MotorType.kBrushed );
 
     public RobotIntakeManipulator()
     {

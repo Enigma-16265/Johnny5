@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.config.RobotConfig;
+import frc.robot.config.RobotConfig.TurretConfig;
 import frc.robot.logging.DataNetworkTableLog;
 import frc.robot.logging.Log;
 import frc.robot.logging.LogManager;
@@ -37,30 +38,24 @@ public class RobotTurretSpinManipulator extends SubsystemBase
                     "scaledSpeed",      DataNetworkTableLog.COLUMN_TYPE.DOUBLE,
                     "spinState",        DataNetworkTableLog.COLUMN_TYPE.STRING ) );
 
-    public static final int     TURRET_SPIN_CAN_ID                 = 15;
-    public static final double  TURRET_SPIN_SCALE_FACTOR           = 0.20;
-    public static final double  ENCODER_POSITION_CONVERSION_FACTOR = 0.25;
-    public static final double  PULLY_CIRCUMFERENCE                = Math.PI * 1.0; // inches
-    public static final double  MIN_ROTATION_DISTANCE              = -1.0;
-    public static final double  MAX_ROTATION_DISTANCE              = 1.0;
-    public static final boolean ENFORCE_LIMITS_DEFAULT             = true;
+    public static final int CAN_ID = 15;
 
-    private CANSparkMax     turretSpin        = new CANSparkMax( TURRET_SPIN_CAN_ID, MotorType.kBrushless );
+    private CANSparkMax     turretSpin        = new CANSparkMax( CAN_ID, MotorType.kBrushless );
     private RelativeEncoder turretSpinEncoder = turretSpin.getEncoder();
 
-    private boolean         enforceLimits     = ENFORCE_LIMITS_DEFAULT;
+    private boolean         enforceLimits     = TurretConfig.ENFORCE_LIMITS_DEFAULT;
 
     public RobotTurretSpinManipulator()
     {
         turretSpinEncoder.setPosition( RobotConfig.ZERO_POSITION );
-        turretSpinEncoder.setPositionConversionFactor( ENCODER_POSITION_CONVERSION_FACTOR );
+        turretSpinEncoder.setPositionConversionFactor( TurretConfig.ENCODER_POSITION_CONVERSION_FACTOR );
     }
     
     private int cnt = 1;
     public void spin( double speed )
     {
-        double rotationDistance = turretSpinEncoder.getPosition() * PULLY_CIRCUMFERENCE;
-        double scaledSpeed      = speed * TURRET_SPIN_SCALE_FACTOR;
+        double rotationDistance = turretSpinEncoder.getPosition() * TurretConfig.PULLY_CIRCUMFERENCE;
+        double scaledSpeed      = speed * TurretConfig.TURRET_SPIN_SCALE_FACTOR;
         
         if ( ( cnt % 10 ) == 0 )
         {
@@ -79,7 +74,7 @@ public class RobotTurretSpinManipulator extends SubsystemBase
 
             if ( speed < RobotConfig.ZERO_SPEED )
             {
-                if ( MIN_ROTATION_DISTANCE <= rotationDistance )
+                if ( TurretConfig.MIN_ROTATION_DISTANCE <= rotationDistance )
                 {
                     log.trace( "Spin Left" );
                     dataLog.publish( "spinState", SPIN_STATE.LEFT.name() );
@@ -95,7 +90,7 @@ public class RobotTurretSpinManipulator extends SubsystemBase
             else
             if ( speed > RobotConfig.ZERO_SPEED )
             {
-                if ( MAX_ROTATION_DISTANCE >= rotationDistance )
+                if ( TurretConfig.MAX_ROTATION_DISTANCE >= rotationDistance )
                 {
                     log.trace( "Spin Right" );
                     dataLog.publish( "spinState", SPIN_STATE.RIGHT.name() );
