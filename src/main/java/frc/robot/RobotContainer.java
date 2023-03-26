@@ -10,6 +10,8 @@ import frc.robot.commands.AutoDriveCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.TurretSpinCommand;
+import frc.robot.config.RobotConfig.DriverInputMapping;
+import frc.robot.config.RobotConfig.ManipulatorInputMapping;
 import frc.robot.subsystems.RobotArmLiftManipulator;
 import frc.robot.subsystems.RobotArmSlideManipulator;
 import frc.robot.subsystems.RobotDrive;
@@ -19,43 +21,16 @@ import frc.robot.subsystems.RobotDrive.DriveMode;
 
 //Nav x2 mxp
 
-public class RobotContainer {
+public class RobotContainer
+{
 
-    public static class JOYSTICK_0
-    {
-        public static final int PORT               = 0;
-        public static final int LEFT_X_AXIS_PORT   = 0;
-        public static final int LEFT_Y_AXIS_PORT   = 1;
-        public static final int RIGHT_X_AXIS_PORT  = 4;
-        public static final int RIGHT_Y_AXIS_PORT  = 5;
-        public static final int LEFT_TRIGGER_PORT  = 2;
-        public static final int RIGHT_TRIGGER_PORT = 3;
-        public static final int A_BUTTON_ID        = 1;
-        public static final int B_BUTTON_ID        = 2;
-        public static final int X_BUTTON_ID        = 3;
-        public static final int Y_BUTTON_ID        = 4;
-    }
-
-    public static class JOYSTICK_1
-    {
-        public static final int PORT               = 1;
-        public static final int LEFT_X_AXIS_PORT   = 0;
-        public static final int LEFT_Y_AXIS_PORT   = 1;
-        public static final int RIGHT_X_AXIS_PORT  = 4;
-        public static final int RIGHT_Y_AXIS_PORT  = 5;
-        public static final int LEFT_TRIGGER_PORT  = 2;
-        public static final int RIGHT_TRIGGER_PORT = 3;
-        public static final int A_BUTTON_ID        = 1;
-        public static final int B_BUTTON_ID        = 2;
-        public static final int X_BUTTON_ID        = 3;
-        public static final int Y_BUTTON_ID        = 4;
-    }
-
-    private final Joystick     gamepad      = new Joystick( JOYSTICK_0.PORT );
-    private final RobotDrive   robotDrive   = new RobotDrive();
-    private final DriveCommand driveCommand;
+    // Drive Train Command and Control
+    private final Joystick                   driverGamepad              = new Joystick( DriverInputMapping.PORT );
+    private final RobotDrive                 robotDrive                 = new RobotDrive();
+    private final DriveCommand               driveCommand;
     
-    private final Joystick                   gamepadManipulator         = new Joystick( JOYSTICK_1.PORT );
+    // Manipulator Command and Control
+    private final Joystick                   manipulatorGamepad         = new Joystick( ManipulatorInputMapping.PORT );
 
     private final RobotArmLiftManipulator    robotArmLiftManipulator    = new RobotArmLiftManipulator();
     private final ArmLiftCommand             armLiftCommand;
@@ -74,29 +49,29 @@ public class RobotContainer {
     public RobotContainer() {
 
         driveCommand = new DriveCommand( robotDrive,
-                                         () -> gamepad.getRawAxis( JOYSTICK_0.LEFT_X_AXIS_PORT  ),
-                                         () -> gamepad.getRawAxis( JOYSTICK_0.LEFT_Y_AXIS_PORT  ),
-                                         () -> gamepad.getRawAxis( JOYSTICK_0.RIGHT_X_AXIS_PORT ),
-                                         () -> gamepad.getRawAxis( JOYSTICK_0.RIGHT_Y_AXIS_PORT ) );       
+                                         () -> driverGamepad.getRawAxis( DriverInputMapping.LEFT_X_AXIS_PORT  ),
+                                         () -> driverGamepad.getRawAxis( DriverInputMapping.LEFT_Y_AXIS_PORT  ),
+                                         () -> driverGamepad.getRawAxis( DriverInputMapping.RIGHT_X_AXIS_PORT ),
+                                         () -> driverGamepad.getRawAxis( DriverInputMapping.RIGHT_Y_AXIS_PORT ) );       
         robotDrive.setDefaultCommand( driveCommand );
         
         armLiftCommand = new ArmLiftCommand( robotArmLiftManipulator,
-                                             () -> gamepadManipulator.getRawAxis( JOYSTICK_1.LEFT_Y_AXIS_PORT ) );
+                                             () -> manipulatorGamepad.getRawAxis( ManipulatorInputMapping.LEFT_Y_AXIS_PORT ) );
         robotArmLiftManipulator.setDefaultCommand( armLiftCommand );
 
         armSlideCommand = new ArmSlideCommand( robotArmSlideManipulator,
-                                               () -> -gamepadManipulator.getRawAxis( JOYSTICK_1.RIGHT_Y_AXIS_PORT ) );
+                                               () -> -manipulatorGamepad.getRawAxis( ManipulatorInputMapping.RIGHT_Y_AXIS_PORT ) );
         robotArmSlideManipulator.setDefaultCommand( armSlideCommand );
 
         turretSpinCommand = new TurretSpinCommand( robotTurretSpinManipulator,
-                                                   () -> - gamepadManipulator.getRawAxis( JOYSTICK_1.RIGHT_X_AXIS_PORT ) );
+                                                   () -> - manipulatorGamepad.getRawAxis( ManipulatorInputMapping.RIGHT_X_AXIS_PORT ) );
         robotTurretSpinManipulator.setDefaultCommand( turretSpinCommand );
 
         intakeCommand = new IntakeCommand( robotIntakeManipulator,
                                            () ->
         {
-            double ltrigger = gamepadManipulator.getRawAxis( JOYSTICK_1.LEFT_TRIGGER_PORT );
-            double rtrigger = gamepadManipulator.getRawAxis( JOYSTICK_1.RIGHT_TRIGGER_PORT );
+            double ltrigger = manipulatorGamepad.getRawAxis( ManipulatorInputMapping.LEFT_TRIGGER_PORT );
+            double rtrigger = manipulatorGamepad.getRawAxis( ManipulatorInputMapping.RIGHT_TRIGGER_PORT );
             double speed    = ltrigger + -rtrigger;
             return speed;
         } );
@@ -108,23 +83,32 @@ public class RobotContainer {
         //configureButtonBindings();
     }
 
-    public void modeCheck() {
+    public void modeCheck()
+    {
     
-        if (gamepad.getRawButtonPressed( JOYSTICK_0.B_BUTTON_ID )) {
+        if ( driverGamepad.getRawButtonPressed( DriverInputMapping.B_BUTTON_ID ) )
+        {
             robotDrive.setMode( DriveMode.ARCADE );
-        } else if (gamepad.getRawButtonPressed( JOYSTICK_0.A_BUTTON_ID )) {
+        } else
+        if ( driverGamepad.getRawButtonPressed( DriverInputMapping.A_BUTTON_ID ) )
+        {
             robotDrive.setMode( DriveMode.TANK );
-        } else if (gamepad.getRawButtonPressed( JOYSTICK_0.X_BUTTON_ID )) {
+        } else
+        if ( driverGamepad.getRawButtonPressed( DriverInputMapping.X_BUTTON_ID ) )
+        {
             robotDrive.setMode( DriveMode.CURVATURE );
         }
         
-        if (gamepadManipulator.getRawButtonPressed( JOYSTICK_1.Y_BUTTON_ID )) {
+
+        if ( manipulatorGamepad.getRawButtonPressed( ManipulatorInputMapping.Y_BUTTON_ID ) )
+        {
             robotArmLiftManipulator.enforceLimitToggle();
             robotArmSlideManipulator.enforceLimitToggle();
             robotTurretSpinManipulator.enforceLimitToggle();
         }
 
-        if (gamepadManipulator.getRawButtonPressed( JOYSTICK_1.B_BUTTON_ID )) {
+        if ( manipulatorGamepad.getRawButtonPressed( ManipulatorInputMapping.B_BUTTON_ID ) )
+        {
             robotArmLiftManipulator.resetEncoder();
             robotArmSlideManipulator.resetEncoder();
             robotTurretSpinManipulator.resetEncoder();

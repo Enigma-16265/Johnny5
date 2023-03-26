@@ -7,7 +7,7 @@ public class RobotConfig
     public static double ZERO_POSITION      = 0.0;
     public static double EPLISON_DIST       = 3.0;
 
-    public static class Joystick_0
+    public static class DriverInputMapping
     {
         public static int PORT               = 0;
         public static int LEFT_X_AXIS_PORT   = 0;
@@ -22,7 +22,7 @@ public class RobotConfig
         public static int Y_BUTTON_ID        = 4;
     }
 
-    public static class Joystick_1
+    public static class ManipulatorInputMapping
     {
         public static int PORT               = 1;
         public static int LEFT_X_AXIS_PORT   = 0;
