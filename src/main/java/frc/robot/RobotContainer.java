@@ -100,6 +100,7 @@ public class RobotContainer {
             double speed    = ltrigger + -rtrigger;
             return speed;
         } );
+
         robotIntakeManipulator.setDefaultCommand( intakeCommand );
 
         autoDriveCommand = new AutoDriveCommand( robotDrive );

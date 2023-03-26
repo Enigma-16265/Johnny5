@@ -47,7 +47,7 @@ public class RobotDrive extends SubsystemBase{
     public static final double  ARCADE_Y_SCALE_FACTOR    = 0.90;
     public static final double  TANK_SCALE_FACTOR        = 0.90;
     public static final double  CURVATURE_X_SCALE_FACTOR = 0.75;
-    public static final double  CURVATURE_Y_SCALE_FACTOR = 0.90;
+    public static final double  CURVATURE_Y_SCALE_FACTOR = 0.75;
 
     private MotorControllerGroup leftMotors = 
         new MotorControllerGroup( new WPI_VictorSPX( LEFT_MOTOR_FRONT_CAN_ID ),

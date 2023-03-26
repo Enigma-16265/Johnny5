@@ -42,7 +42,7 @@ public class RobotArmSlideManipulator extends SubsystemBase
     public static final double  PULLY_CIRCUMFERENCE                = Math.PI * 1.5; //inches
     public static final double  MIN_ROTATION_DISTANCE              = 0.0;
     public static final double  MAX_ROTATION_DISTANCE              = PULLY_CIRCUMFERENCE * 6;
-    public static final boolean ENFORCE_LIMITS                     = false;
+    public static final boolean ENFORCE_LIMITS                     = true;
     
     public static final double  EPLISON_DIST                       = 0.1;
     public static final double  EPLISON_SPEED                      = 0.001;

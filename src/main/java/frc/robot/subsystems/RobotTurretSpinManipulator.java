@@ -37,7 +37,7 @@ public class RobotTurretSpinManipulator extends SubsystemBase
                     "spinState",        DataNetworkTableLog.COLUMN_TYPE.STRING ) );
 
     public static final int     TURRET_SPIN_CAN_ID                 = 15;
-    public static final double  TURRET_SPIN_SCALE_FACTOR           = 0.08;
+    public static final double  TURRET_SPIN_SCALE_FACTOR           = 0.20;
     public static final double  ENCODER_POSITION_CONVERSION_FACTOR = 0.25;
     public static final double  PULLY_CIRCUMFERENCE                = Math.PI * 1.0; // inches
     public static final double  MIN_ROTATION_DISTANCE              = -1.0;
