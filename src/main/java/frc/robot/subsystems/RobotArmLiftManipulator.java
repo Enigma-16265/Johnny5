@@ -137,13 +137,16 @@ public class RobotArmLiftManipulator extends SubsystemBase
 
     public void enforceLimitToggle()
     {
-        if ( enforceLimits )
+        if ( ArmLiftConfig.ENFORCE_LIMITS_DEFAULT )
         {
-            enforceLimits = false;
-        }
-        else
-        {
-            enforceLimits = true;
+            if ( enforceLimits )
+            {
+                enforceLimits = false;
+            }
+            else
+            {
+                enforceLimits = true;
+            }
         }
     }
     

@@ -30,7 +30,8 @@ public class Robot extends TimedRobot {
   {
       log.info( "roboInit" );
       robotContainer = new RobotContainer();
-      //CameraServer.startAutomaticCapture();
+      CameraServer.startAutomaticCapture(0);
+      CameraServer.startAutomaticCapture(1);
   }
 
   @Override

@@ -131,13 +131,16 @@ public class RobotTurretSpinManipulator extends SubsystemBase
 
     public void enforceLimitToggle()
     {
-        if ( enforceLimits )
+        if ( TurretConfig.ENFORCE_LIMITS_DEFAULT )
         {
-            enforceLimits = false;
-        }
-        else
-        {
-            enforceLimits = true;
+            if ( enforceLimits )
+            {
+                enforceLimits = false;
+            }
+            else
+            {
+                enforceLimits = true;
+            }
         }
     }
 

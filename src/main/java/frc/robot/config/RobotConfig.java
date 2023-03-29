@@ -96,19 +96,19 @@ public class RobotConfig
     }
 
     public static class ArmSlideConfig
-    {
-        public static double  SPEED_SCALE_FACTOR                 = 0.50;
+    { //78.0  4.7123
+        public static double  SPEED_SCALE_FACTOR                 = 1.0;
         public static double  ENCODER_POSITION_CONVERSION_FACTOR = 0.0625;
         public static double  PULLY_CIRCUMFERENCE                = Math.PI * 1.5; //inches
         public static double  MIN_ROTATION_DISTANCE              = 0.0;
         public static double  MAX_DISTANCE_BACKOFF               = 5.0;
-        public static double  MAX_ROTATION_DISTANCE              = ( PULLY_CIRCUMFERENCE * 6 ) - MAX_DISTANCE_BACKOFF;
+        public static double  MAX_ROTATION_DISTANCE              = ( PULLY_CIRCUMFERENCE * 16.97 ) - MAX_DISTANCE_BACKOFF;
         public static boolean ENFORCE_LIMITS_DEFAULT             = true;
     }
 
     public static class ArmSlideCommandConfig
     {
-        public static double  SPEED_ACCEL_LIMIT_UNITS_PER_SEC = 3.0;
+        public static double  SPEED_ACCEL_LIMIT_UNITS_PER_SEC = 0;
     }
 
     public static class TurretConfig
@@ -118,12 +118,12 @@ public class RobotConfig
         public static double  PULLY_CIRCUMFERENCE                = Math.PI * 1.0; // inches
         public static double  MIN_ROTATION_DISTANCE              = -1.0;
         public static double  MAX_ROTATION_DISTANCE              = 1.0;
-        public static boolean ENFORCE_LIMITS_DEFAULT             = true;
+        public static boolean ENFORCE_LIMITS_DEFAULT             = false;
     }
 
     public static class TurretSpinCommandConfig
     {
-        public static double  SPEED_ACCEL_LIMIT_UNITS_PER_SEC = 3.0;
+        public static double  SPEED_ACCEL_LIMIT_UNITS_PER_SEC = 0.0;
     }
     
 }
