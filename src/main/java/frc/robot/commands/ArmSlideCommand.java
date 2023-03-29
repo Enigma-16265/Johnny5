@@ -33,7 +33,7 @@ public class ArmSlideCommand extends CommandBase{
     {
         double speed = speedSupplier.get();
         
-        speed = ( Math.abs( speed ) > RobotConfig.JOYSTICK_DEAD_BAND ) ? speed : RobotConfig.ZERO_SPEED;
+        //speed = ( Math.abs( speed ) > RobotConfig.JOYSTICK_DEAD_BAND ) ? speed : RobotConfig.ZERO_SPEED;
 
         if ( ArmSlideCommandConfig.SPEED_ACCEL_LIMIT_UNITS_PER_SEC  != RobotConfig.ZERO_RATE_LIMIT )
         {

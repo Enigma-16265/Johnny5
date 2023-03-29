@@ -102,7 +102,7 @@ public class RobotConfig
         public static double  PULLY_CIRCUMFERENCE                = Math.PI * 1.5; //inches
         public static double  MIN_ROTATION_DISTANCE              = 0.0;
         public static double  MAX_DISTANCE_BACKOFF               = 5.0;
-        public static double  MAX_ROTATION_DISTANCE              = ( PULLY_CIRCUMFERENCE * 16.97 ) - MAX_DISTANCE_BACKOFF;
+        public static double  MAX_ROTATION_DISTANCE              = ( PULLY_CIRCUMFERENCE * 5.94 ) - MAX_DISTANCE_BACKOFF;
         public static boolean ENFORCE_LIMITS_DEFAULT             = true;
     }
 
