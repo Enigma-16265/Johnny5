@@ -74,7 +74,7 @@ public class RobotConfig
                                                                                    TANK_ORIENTATION_INVERT_RIGHT_SPEED_MASK ;
 
         public static double  CURVATURE_SPEED_ACCEL_LIMIT_UNITS_PER_SEC          = 3.0;
-        public static double  CURVATURE_ROTATION_SPEED_ACCEL_LIMIT_UNITS_PER_SEC = 3.0;
+        public static double  CURVATURE_ROTATION_SPEED_ACCEL_LIMIT_UNITS_PER_SEC = 0.0;
         public static byte    CURVATURE_ORIENTATION                              = CURVATURE_ORIENTATION_INVERT_SPEED_MASK |
                                                                                    CURVATURE_ORIENTATION_INVERT_ROTATION_MASK;
     }
@@ -97,7 +97,7 @@ public class RobotConfig
 
     public static class ArmSlideConfig
     { //78.0  4.7123
-        public static double  SPEED_SCALE_FACTOR                 = 1.0;
+        public static double  SPEED_SCALE_FACTOR                 = 0.75;
         public static double  ENCODER_POSITION_CONVERSION_FACTOR = 0.0625;
         public static double  PULLY_CIRCUMFERENCE                = Math.PI * 1.5; //inches
         public static double  MIN_ROTATION_DISTANCE              = 0.0;
