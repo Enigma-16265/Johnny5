@@ -15,11 +15,11 @@ public class AutoDriveCommand extends CommandBase {
 
     // Speeds are scaled in sybsystems.RobotDrive according to Drive Mode scale
     // factors
-    static private final double DRIVE_FORWARD_SPEED               = 0.75;
+    static private final double DRIVE_FORWARD_SPEED               = -0.75;
     static private final double DRIVE_FORWARD_COMPLETE_MARK_SECS  = 0.55;
     static private final double TRANSITION_SPEED                  = 0.0;
     static private final double TRANSITION_COMPLETE_MARK_SECS     = DRIVE_FORWARD_COMPLETE_MARK_SECS + 0.2;
-    static private final double DRIVE_BACKWARD_SPEED              = -0.75;
+    static private final double DRIVE_BACKWARD_SPEED              = 0.75;
     static private final double DRIVE_BACKWARD_COMPLETE_MARK_SECS = TRANSITION_COMPLETE_MARK_SECS + 2.10;
 
     private final Timer timer = new Timer();
